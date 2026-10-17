@@ -2,10 +2,17 @@
 // backend's waitlist instead of only playing the reply.
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { JamoFace, type Mood } from './JamoFace';
-import { T, type Lang } from './copy';
+import { LOCALE, T, type Lang } from './copy';
 
 type Stage = 'open' | 'sending' | 'reply' | 'party' | 'joined';
 const MOODS: Mood[] = ['working', 'thinking', 'wink', 'working', 'idle'];
+const LANGS: Lang[] = ['ru', 'uz', 'en'];
+
+/** `?lang=uz` or `?lang=en` picks the language; anything else is Russian. */
+function initialLang(): Lang {
+  const asked = new URLSearchParams(location.search).get('lang');
+  return LANGS.find((l) => l === asked) ?? 'ru';
+}
 
 /** 204 for a new address and a known one alike; otherwise the server's localized detail, if any. */
 async function joinWaitlist(email: string, lang: Lang): Promise<string | null> {
@@ -13,7 +20,7 @@ async function joinWaitlist(email: string, lang: Lang): Promise<string | null> {
     const res = await fetch(`${import.meta.env.VITE_API_BASE ?? ''}/api/v1/waitlist`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, source: 'hero', locale: lang }),
+      body: JSON.stringify({ email, source: 'hero', locale: LOCALE[lang] }),
     });
     if (res.ok) return null;
     const body = await res.json().catch(() => null);
@@ -24,7 +31,7 @@ async function joinWaitlist(email: string, lang: Lang): Promise<string | null> {
 }
 
 export function ComingSoon() {
-  const [lang, setLangState] = useState<Lang>(() => (new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'ru'));
+  const [lang, setLangState] = useState<Lang>(initialLang);
   const [email, setEmail] = useState('');
   const [invalid, setInvalid] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
@@ -43,7 +50,7 @@ export function ComingSoon() {
     return () => { clearInterval(timer); timers.current.forEach(clearTimeout); };
   }, []);
 
-  useEffect(() => { document.documentElement.lang = lang; }, [lang]);
+  useEffect(() => { document.documentElement.lang = LOCALE[lang]; }, [lang]);
 
   const setLang = (next: Lang) => { setLangState(next); setTyper((s) => ({ ...s, chars: 0, hold: 0 })); };
 
@@ -64,7 +71,7 @@ export function ComingSoon() {
     });
   };
 
-  const t = T[lang], ru = lang === 'ru';
+  const t = T[lang];
   const listening = focused || !!email;
   const done = stage === 'reply' || stage === 'party' || stage === 'joined';
   const confused = invalid || !!failure;
@@ -82,8 +89,9 @@ export function ComingSoon() {
           <span style={{ fontSize: 20, fontWeight: 700, letterSpacing: '-.02em' }}>MyJamo</span>
         </div>
         <div role="group" aria-label="Language" style={{ display: 'flex', gap: 2, padding: 3, borderRadius: 12, background: 'rgba(255,255,255,.6)', border: '1px solid rgba(255,255,255,.9)', boxShadow: 'inset 0 1px 0 #fff' }}>
-          <button type="button" onClick={() => setLang('ru')} aria-pressed={ru} style={{ height: 30, padding: '0 12px', border: 0, borderRadius: 9, background: ru ? '#0e121b' : 'transparent', color: ru ? '#fff' : '#525866', font: 'inherit', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>RU</button>
-          <button type="button" onClick={() => setLang('en')} aria-pressed={!ru} style={{ height: 30, padding: '0 12px', border: 0, borderRadius: 9, background: ru ? 'transparent' : '#0e121b', color: ru ? '#525866' : '#fff', font: 'inherit', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>EN</button>
+          {LANGS.map((l) => (
+            <button key={l} type="button" onClick={() => setLang(l)} aria-pressed={l === lang} style={{ height: 30, padding: '0 12px', border: 0, borderRadius: 9, background: l === lang ? '#0e121b' : 'transparent', color: l === lang ? '#fff' : '#525866', font: 'inherit', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>{l.toUpperCase()}</button>
+          ))}
         </div>
       </header>
 
@@ -116,7 +124,7 @@ export function ComingSoon() {
       </main>
 
       <footer style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 22, padding: '24px 20px 32px', fontSize: 14, color: '#717784' }}>
-        <span>© 2026 MyJamo</span><a href="mailto:hello@myjamo.com" className="mail">hello@myjamo.com</a>
+        <span>© 2026 MyJamo</span>
       </footer>
     </div>
   );
