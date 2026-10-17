@@ -143,9 +143,17 @@ export function JamoFace(p: { mood: Mood; size: number; track?: boolean }) {
   }, [mood]);
 
   const EYE_TR = 'transform .1s, clip-path .3s ease, left .45s cubic-bezier(.4,0,.2,1), top .45s cubic-bezier(.4,0,.2,1), width .45s cubic-bezier(.4,0,.2,1), height .45s cubic-bezier(.4,0,.2,1)';
+  // The glow is a drop-shadow on a wrapper, so it follows the clipped shape; as a box-shadow on the
+  // clipped element itself it was cut off at the eye's box and left square corners under the eye.
+  // Chrome blurs a drop-shadow twice as wide as a box-shadow, hence half the glow's blur.
+  const orb = (ref: typeof bL, left: number, top: number, w: number, h: number, clip?: string) => (
+    <div key="c" ref={ref} style={{ position: 'absolute', left, top, width: w, height: h, filter: 'drop-shadow(0 0 ' + (s * .03).toFixed(1) + 'px rgba(225,235,255,.55))', transition: EYE_TR }}>
+      <div style={{ position: 'absolute', inset: 0, borderRadius: ew, background: WH, clipPath: clip, transition: 'clip-path .3s ease' }} />
+    </div>
+  );
   const circ = (ref: typeof bL, sc?: number, clip?: string) => {
     sc = sc || 1; const w = ew * sc, hh = eh * sc;
-    return <div key="c" ref={ref} style={{ position: 'absolute', left: (ew - w) / 2, top: (eh - hh) / 2, width: w, height: hh, borderRadius: ew, background: WH, boxShadow: glow, transition: EYE_TR, clipPath: clip }} />;
+    return orb(ref, (ew - w) / 2, (eh - hh) / 2, w, hh, clip);
   };
   const arc = (d: string) => (
     <svg key="a" width={ew * 1.5} height={ew * 1.5} viewBox="0 0 24 24" style={{ position: 'absolute', left: -ew * .25, top: eh / 2 - ew * .75, overflow: 'visible', filter: 'drop-shadow(0 0 ' + (s * .03).toFixed(1) + 'px rgba(225,235,255,.6))' }}>
@@ -160,7 +168,7 @@ export function JamoFace(p: { mood: Mood; size: number; track?: boolean }) {
       case 'listen': return [circ(b, 1.12)];
       case 'round': return [circ(b)];
       case 'round3': return [circ(b, 1, P(0, 0))];
-      case 'dot3': { const dd = s * .143, sh = L ? -.09 * s : -.17 * s, sv = H / 2 - (EY + eh / 2); return [<div key="c" ref={b} style={{ position: 'absolute', left: (ew - dd) / 2 + sh, top: (eh - dd) / 2 + sv, width: dd, height: dd, borderRadius: ew, background: WH, boxShadow: glow, clipPath: P(0, 0), transition: EYE_TR }} />]; }
+      case 'dot3': { const dd = s * .143, sh = L ? -.09 * s : -.17 * s, sv = H / 2 - (EY + eh / 2); return [orb(b, (ew - dd) / 2 + sh, (eh - dd) / 2 + sv, dd, dd, P(0, 0))]; }
       case 'big': return [circ(b, 1.25)];
       case 'confused': return [circ(b, L ? 1.12 : .74)];
       case 'focus': return [circ(b, 1, P(32, 32))];
