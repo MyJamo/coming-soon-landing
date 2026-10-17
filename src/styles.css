@@ -1,0 +1,27 @@
+/* The design's <helmet> styles, verbatim, plus the two style-hover rules as classes. */
+body { margin: 0; background: #f7f1ee; font-family: 'Onest', system-ui, sans-serif; -webkit-font-smoothing: antialiased; color: #0e121b; }
+*, *::before, *::after { box-sizing: border-box; }
+a { color: #e2552f; text-decoration: none; }
+a:hover { color: #b8401f; }
+input::placeholder { color: #99a0ae; }
+@keyframes caret { 50% { opacity: 0; } }
+@keyframes jamoBounce { 0%,60%,100% { transform: translateY(0); opacity: .6 } 30% { transform: translateY(-45%); opacity: 1 } }
+@keyframes jamoHop { 0%,100% { transform: translateY(0) } 30% { transform: translateY(-7px) } 50% { transform: translateY(0) } 60% { transform: translateY(-3px) } 75% { transform: translateY(0) } }
+@keyframes jamoBob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-3px) } }
+@keyframes jamoJolt { 0%,70%,100% { transform: scale(1) translateY(0) } 75% { transform: scale(1.08) translateY(-6px) } 85% { transform: scale(1) translateY(0) } }
+@keyframes jamoTilt { 0%,100% { transform: rotate(-9deg) } 50% { transform: rotate(-5deg) } }
+@keyframes jamoDraw { from { stroke-dashoffset: 24 } to { stroke-dashoffset: 0 } }
+@keyframes jamoWobble { 0%,100% { transform: rotate(-10deg) } 50% { transform: rotate(12deg) } }
+@keyframes jamoTwinkle { 0%,100% { transform: scale(.4) rotate(0); opacity: .2 } 50% { transform: scale(1) rotate(45deg); opacity: 1 } }
+@keyframes jamoConfetti { 0% { transform: translate(0,0) rotate(0); opacity: 0 } 10% { opacity: 1 } 100% { transform: translate(var(--x),var(--y)) rotate(var(--r)); opacity: 0 } }
+@keyframes jamoTrace { from { stroke-dashoffset: 100 } to { stroke-dashoffset: 0 } }
+@keyframes jamoScan { 0%,100% { transform: translateX(-4%) } 50% { transform: translateX(4%) } }
+@keyframes jamoPop { 0% { transform: scale(1) } 35% { transform: scale(1.08) } 100% { transform: scale(1) } }
+@keyframes jamoBulk { 0% { transform: scale(0) } 60% { transform: scale(1.25) } 80% { transform: scale(.92) } 100% { transform: scale(1) } }
+@keyframes jamoListenSway { 0%,100% { transform: rotate(-4deg) translateY(0) } 50% { transform: rotate(-3deg) translateY(-1.5px) } }
+@keyframes jamoListenIn { 0% { transform: translateX(var(--dx)) scale(1.15); opacity: 0 } 35% { opacity: 1 } 100% { transform: translateX(0) scale(.8); opacity: 0 } }
+
+.cta { background: #0e121b; }
+.cta:hover { background: #2b303b; }
+.mail { color: #717784; }
+.mail:hover { color: #0e121b; }
