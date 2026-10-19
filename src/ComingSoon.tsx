@@ -1,5 +1,5 @@
 // Claude Design "Coming Soon v2.dc.html", 1:1. The one change: the form puts the address on the
-// backend's waitlist instead of only playing the reply.
+// waitlist (api/waitlist.ts) instead of only playing the reply.
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { JamoFace, type Mood } from './JamoFace';
 import { LOCALE, T, type Lang } from './copy';
@@ -14,17 +14,16 @@ function initialLang(): Lang {
   return LANGS.find((l) => l === asked) ?? 'ru';
 }
 
-/** 204 for a new address and a known one alike; otherwise the server's localized detail, if any. */
+/** 204 for a new address and a known one alike; a 400 is an address the function turned away. */
 async function joinWaitlist(email: string, lang: Lang): Promise<string | null> {
   try {
-    const res = await fetch(`${import.meta.env.VITE_API_BASE ?? ''}/api/v1/waitlist`, {
+    const res = await fetch('/api/waitlist', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, source: 'hero', locale: LOCALE[lang] }),
     });
     if (res.ok) return null;
-    const body = await res.json().catch(() => null);
-    return typeof body?.detail === 'string' ? body.detail : T[lang].failed;
+    return res.status === 400 ? T[lang].error : T[lang].failed;
   } catch {
     return T[lang].failed;
   }
