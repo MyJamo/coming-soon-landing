@@ -4,9 +4,15 @@ The pre-launch page: Claude Design "Coming Soon v2.dc.html" (project
 `a3c46b2d-ce89-4dfe-9f7d-2387ee5f0636`), built 1:1 with Vite + React. `src/JamoFace.tsx` is the
 design's typed port of `dots/src/components/JamoFace.tsx`, cut down to the moods the page uses.
 
-The one addition to the design: the form posts `{ email, source: "hero", locale }` to
-`POST /api/waitlist`, a Vercel Function (`api/waitlist.ts`) that writes to Neon Postgres. It answers
-204 for a new and a known address alike, 400 for one it turns away, 500 if the database fails.
+The additions to the design: the form asks for a phone number first ("Prefer email?" switches it to
+an address) and posts `{ phone | email, source: "hero", locale }` to `POST /api/waitlist`, a Vercel
+Function (`api/waitlist.ts`) that writes to Neon Postgres. Phones are stored as `+` and digits; nine
+digits without a `+` count as an Uzbek number. It answers 204 for a new and a known contact alike,
+400 for one it turns away, 500 if the database fails.
+
+Each row holds a phone or an email. The function brings an older email-only table to that shape on
+its first signup after a deploy: it adds the `phone` column and swaps the email primary key for
+unique indexes, in one transaction, without rewriting or deleting rows.
 
 ```sh
 npm install
@@ -26,4 +32,4 @@ npm run build    # static files in dist/
    Function itself does not limit callers.
 
 Reading the list: Neon's SQL editor, or
-`psql "$DATABASE_URL" -c "\copy (SELECT email, locale, source, created_at FROM waitlist_signups ORDER BY created_at) TO 'waitlist.csv' CSV HEADER"`.
+`psql "$DATABASE_URL" -c "\copy (SELECT phone, email, locale, source, created_at FROM waitlist_signups ORDER BY created_at) TO 'waitlist.csv' CSV HEADER"`.

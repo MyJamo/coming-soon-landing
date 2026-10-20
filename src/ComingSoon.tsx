@@ -1,10 +1,12 @@
-// Claude Design "Coming Soon v2.dc.html", 1:1. The one change: the form puts the address on the
-// waitlist (api/waitlist.ts) instead of only playing the reply.
+// Claude Design "Coming Soon v2.dc.html", 1:1. The changes: the form puts the contact on the
+// waitlist (api/waitlist.ts) instead of only playing the reply, and asks for a phone number first,
+// with email one click away.
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { JamoFace, type Mood } from './JamoFace';
 import { LOCALE, T, type Lang } from './copy';
 
 type Stage = 'open' | 'sending' | 'reply' | 'party' | 'joined';
+type Contact = 'phone' | 'email';
 const MOODS: Mood[] = ['working', 'thinking', 'wink', 'working', 'idle'];
 const LANGS: Lang[] = ['ru', 'uz', 'en'];
 
@@ -14,16 +16,23 @@ function initialLang(): Lang {
   return LANGS.find((l) => l === asked) ?? 'ru';
 }
 
-/** 204 for a new address and a known one alike; a 400 is an address the function turned away. */
-async function joinWaitlist(email: string, lang: Lang): Promise<string | null> {
+/** The function's own test, loosely: a nine-digit Uzbek number, or a `+` and its country code. */
+function looksValid(contact: Contact, value: string): boolean {
+  if (contact === 'email') return /^\S+@\S+\.\S+$/.test(value);
+  const digits = value.replace(/\D/g, '').length;
+  return /^\+?[\d\s().-]+$/.test(value) && (digits === 9 && !value.startsWith('+') || digits >= 10 && digits <= 15);
+}
+
+/** 204 for a new contact and a known one alike; a 400 is one the function turned away. */
+async function joinWaitlist(contact: Contact, value: string, lang: Lang): Promise<string | null> {
   try {
     const res = await fetch('/api/waitlist', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, source: 'hero', locale: LOCALE[lang] }),
+      body: JSON.stringify({ [contact]: value, source: 'hero', locale: LOCALE[lang] }),
     });
     if (res.ok) return null;
-    return res.status === 400 ? T[lang].error : T[lang].failed;
+    return res.status === 400 ? (contact === 'phone' ? T[lang].phoneError : T[lang].error) : T[lang].failed;
   } catch {
     return T[lang].failed;
   }
@@ -31,7 +40,8 @@ async function joinWaitlist(email: string, lang: Lang): Promise<string | null> {
 
 export function ComingSoon() {
   const [lang, setLangState] = useState<Lang>(initialLang);
-  const [email, setEmail] = useState('');
+  const [contact, setContact] = useState<Contact>('phone');
+  const [value, setValue] = useState('');
   const [invalid, setInvalid] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
   const [focused, setFocused] = useState(false);
@@ -39,6 +49,7 @@ export function ComingSoon() {
   const [typer, setTyper] = useState({ line: 0, chars: 0, hold: 0 });
   const langRef = useRef(lang); langRef.current = lang;
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const input = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const timer = setInterval(() => setTyper((s) => {
@@ -53,16 +64,22 @@ export function ComingSoon() {
 
   const setLang = (next: Lang) => { setLangState(next); setTyper((s) => ({ ...s, chars: 0, hold: 0 })); };
 
+  const switchContact = () => {
+    setContact((c) => (c === 'phone' ? 'email' : 'phone'));
+    setValue(''); setInvalid(false); setFailure(null);
+    input.current?.focus();
+  };
+
   const join = (e: FormEvent) => {
     e.preventDefault();
     if (stage !== 'open') return;
-    const address = email.trim();
-    if (!/^\S+@\S+\.\S+$/.test(address)) { setInvalid(true); return; }
+    const entered = value.trim();
+    if (!looksValid(contact, entered)) { setInvalid(true); return; }
     setStage('sending'); setInvalid(false); setFailure(null);
     // The design's beats (reply at 1.4 s, party at 3.6 s, joined at 6 s), with the reply held until
     // the server has answered.
     const started = performance.now();
-    joinWaitlist(address, lang).then((error) => {
+    joinWaitlist(contact, entered, lang).then((error) => {
       if (error) { setStage('open'); setFailure(error); return; }
       const at = (ms: number, next: Stage) => timers.current.push(setTimeout(() => setStage(next), ms));
       const reply = Math.max(0, 1400 - (performance.now() - started));
@@ -71,14 +88,15 @@ export function ComingSoon() {
   };
 
   const t = T[lang];
-  const listening = focused || !!email;
+  const listening = focused || !!value;
+  const phone = contact === 'phone';
   const done = stage === 'reply' || stage === 'party' || stage === 'joined';
   const confused = invalid || !!failure;
   const mood: Mood = stage === 'sending' ? 'think2' : stage === 'reply' ? 'reply2' : stage === 'party' ? 'celebrate' : stage === 'joined' ? 'happy'
     : confused ? 'confused' : listening ? 'listening' : MOODS[typer.line];
   const status = stage === 'sending' ? t.sending : done ? t.done
-    : invalid ? t.off : failure ? t.oops : listening ? t.listening : t.lines[typer.line].slice(0, typer.chars);
-  const alert = invalid ? t.error : failure;
+    : invalid ? (phone ? t.phoneOff : t.off) : failure ? t.oops : listening ? t.listening : t.lines[typer.line].slice(0, typer.chars);
+  const alert = invalid ? (phone ? t.phoneError : t.error) : failure;
 
   return (
     <div data-screen-label="Coming soon" style={{ position: 'relative', isolation: 'isolate', minHeight: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'radial-gradient(60% 50% at 50% 108%, rgba(255,150,118,.55), transparent 70%), radial-gradient(40% 35% at 50% 30%, rgba(255,255,255,.7), transparent 70%), radial-gradient(35% 35% at 96% 6%, rgba(255,190,160,.45), transparent 70%), #f7f1ee' }}>
@@ -111,7 +129,7 @@ export function ComingSoon() {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, width: '100%' }}>
           {!done && (
             <form onSubmit={join} noValidate style={{ display: 'flex', gap: 8, width: '100%', maxWidth: 460, padding: 6, borderRadius: 18, background: 'rgba(255,255,255,.75)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,.95)', boxShadow: 'inset 0 1px 0 #fff, 0 14px 30px -18px rgba(90,45,30,.35)' }}>
-              <input type="email" value={email} onChange={(e) => { setEmail(e.currentTarget.value); setInvalid(false); setFailure(null); }} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} placeholder="you@company.com" aria-label={t.email} autoComplete="email" style={{ flex: 1, minWidth: 0, height: 48, padding: '0 14px', border: 0, outline: 'none', background: 'transparent', font: 'inherit', fontSize: 15, color: '#0e121b' }} />
+              <input ref={input} type={phone ? 'tel' : 'email'} inputMode={phone ? 'tel' : 'email'} value={value} onChange={(e) => { setValue(e.currentTarget.value); setInvalid(false); setFailure(null); }} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} placeholder={phone ? '+998 90 123 45 67' : 'you@company.com'} aria-label={phone ? t.phone : t.email} autoComplete={phone ? 'tel' : 'email'} style={{ flex: 1, minWidth: 0, height: 48, padding: '0 14px', border: 0, outline: 'none', background: 'transparent', font: 'inherit', fontSize: 15, color: '#0e121b' }} />
               <button type="submit" className="cta" style={{ flex: 'none', height: 48, padding: '0 20px', border: 0, borderRadius: 12, color: '#fff', font: 'inherit', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>{t.cta}</button>
             </form>
           )}
@@ -119,6 +137,9 @@ export function ComingSoon() {
             <div style={{ display: 'flex', alignItems: 'center', minHeight: 60, fontSize: 17, fontWeight: 500 }}>{t.joined}</div>
           )}
           {alert && !done && <div role="alert" style={{ fontSize: 14, color: '#e2552f' }}>{alert}</div>}
+          {!done && (
+            <button type="button" onClick={switchContact} disabled={stage !== 'open'} style={{ padding: '4px 8px', border: 0, background: 'transparent', color: '#525866', font: 'inherit', fontSize: 14, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer' }}>{phone ? t.toEmail : t.toPhone}</button>
+          )}
         </div>
       </main>
 
