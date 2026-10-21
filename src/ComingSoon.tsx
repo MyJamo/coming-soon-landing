@@ -2,6 +2,7 @@
 // waitlist (api/waitlist.ts) instead of only playing the reply, and asks for a phone number first,
 // with email one click away.
 import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { track } from './analytics';
 import { JamoFace, type Mood } from './JamoFace';
 import { LOCALE, T, type Lang } from './copy';
 
@@ -81,6 +82,7 @@ export function ComingSoon() {
     const started = performance.now();
     joinWaitlist(contact, entered, lang).then((error) => {
       if (error) { setStage('open'); setFailure(error); return; }
+      track('generate_lead', { method: contact, form: 'hero' });
       const at = (ms: number, next: Stage) => timers.current.push(setTimeout(() => setStage(next), ms));
       const reply = Math.max(0, 1400 - (performance.now() - started));
       at(reply, 'reply'); at(reply + 2200, 'party'); at(reply + 4600, 'joined');

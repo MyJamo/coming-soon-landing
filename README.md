@@ -22,6 +22,10 @@ npm run build    # static files in dist/
 
 `?lang=uz` or `?lang=en` opens the page in Uzbek or English; Russian is the default.
 
+Google Analytics: property "MyJamo Web" (services@myjamo.com), stream "Coming soon",
+`G-81GHWLS3L5`. `src/analytics.ts` loads it in built pages only. A signup sends `generate_lead` with
+`method` (phone or email), never the contact itself.
+
 ## Deploying on Vercel
 
 1. Import the repo; the Vite preset is detected (build `npm run build`, output `dist`), and
