@@ -22,10 +22,30 @@ function waitlistApi(): Plugin {
   };
 }
 
+/**
+ * Moves the bundle's stylesheet from <head> to the end of <body>, after Jamo's face in index.html. In
+ * <head> it holds up the first paint, and on a slow connection the page stays blank until it is in;
+ * after the face, the face paints at once. main.tsx keeps the face up until the styles have loaded.
+ */
+function stylesAfterBoot(): Plugin {
+  return {
+    name: 'styles-after-boot',
+    apply: 'build',
+    transformIndexHtml: {
+      order: 'post',
+      handler(html) {
+        const links = html.match(/<link rel="stylesheet"[^>]*href="\/assets\/[^>]*>/g) ?? [];
+        for (const link of links) html = html.replace(link, '');
+        return html.replace('</body>', links.join('\n') + '\n</body>');
+      },
+    },
+  };
+}
+
 export default defineConfig(({ mode }) => {
   process.env.DATABASE_URL ??= loadEnv(mode, process.cwd(), '').DATABASE_URL;
   return {
-    plugins: [react(), waitlistApi()],
+    plugins: [react(), waitlistApi(), stylesAfterBoot()],
     server: { port: 5191, strictPort: true },
   };
 });

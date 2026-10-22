@@ -1,0 +1,551 @@
+/* The Jamo web app's look, for mockups: tokens from frontend/src/styles.scss and the rules of the
+   components each block names. Everything is scoped under .jui and prefixed jui- so a landing's own
+   styles never meet it. */
+
+.jui {
+  --gradient-bg: linear-gradient(91.86deg, #e0e6ed 3.8%, #f7d6c8 60.09%, #dce5f9 102.69%);
+  --color-bg: #edf0f5;
+  --color-surface: rgba(255, 255, 255, 0.6);
+  --color-surface-strong: rgba(255, 255, 255, 0.85);
+  --color-border: #e1e4ea;
+  --color-border-strong: #cacfd8;
+  --color-border-glass: rgba(255, 255, 255, 0.8);
+  --color-bg-weak: #f5f7fa;
+  --color-text: #0e121b;
+  --color-text-muted: #525866;
+  --color-text-soft: #99a0ae;
+  --color-text-card: #2b303b;
+  --color-text-field: #727a8d;
+  --color-primary: #ff6b57;
+  --color-primary-warm: #ff7733;
+  --color-primary-send: #ff8447;
+  --color-primary-hover: #f2543f;
+  --color-primary-soft: #ffe4e0;
+  --color-primary-tint: rgba(255, 233, 229, 0.8);
+  --color-danger: #fb3748;
+  --color-danger-bg: rgba(253, 236, 236, 0.8);
+  --color-success: #1fc16b;
+  --color-success-bg: #e0faec;
+  --color-focus: rgba(255, 107, 87, 0.35);
+  --color-drop-bg: rgba(255, 107, 87, 0.1);
+  --color-drop-border: rgba(255, 107, 87, 0.5);
+  --color-info-bg: rgba(235, 241, 255, 0.6);
+  --color-info-text: #182f8b;
+  --color-overdue-bg: #ffe5e7;
+  --color-overdue-text: #8b1822;
+  --glass-sidebar: rgba(255, 255, 255, 0.28);
+  --glass-control: linear-gradient(165deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.42));
+  --glass-hover: rgba(255, 255, 255, 0.76);
+  --glass-divider: rgba(82, 88, 102, 0.1);
+  --glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+  --glass-accent: #b33e30;
+  --glass-primary: linear-gradient(160deg, #da503d, #bd392c);
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 999px;
+  --radius-6: 6px;
+  --radius-12: 12px;
+  --radius-20: 20px;
+  --radius-28: 28px;
+  --text-2xs: 11px; --text-2xs-line: 12px;
+  --text-xs: 12px; --text-xs-line: 16px;
+  --text-sm: 14px; --text-sm-line: 20px;
+  --text-md: 16px; --text-md-line: 24px;
+  --text-lg: 18px; --text-lg-line: 24px;
+  --text-xl: 20px; --text-xl-line: 28px;
+  --track-lg: -0.015em;
+  --track-md: -0.011em;
+  --track-sm: -0.006em;
+  --track-caps: 0.04em;
+  --track-caps-2xs: 0.02em;
+  --shadow: 0 2px 4px rgba(27, 28, 29, 0.04);
+  --shadow-sm: 0 1px 2px rgba(10, 13, 20, 0.03);
+
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: var(--text-sm);
+  line-height: var(--text-sm-line);
+  letter-spacing: var(--track-sm);
+  font-feature-settings: 'cv09' 1, 'ss11' 1, 'calt' 0, 'liga' 0;
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  text-align: left;
+}
+.jui *, .jui *::before, .jui *::after { box-sizing: border-box; }
+.jui button { font: inherit; letter-spacing: inherit; color: inherit; }
+.jui svg { flex: none; }
+.jui-display { font-variation-settings: 'opsz' 32; }
+
+/* ---------- window: the gradient frame, the rail, the panel, the docked chats (org-shell.ts) ---------- */
+.jui-window { position: relative; display: flex; gap: 16px; padding: 16px; overflow: hidden; background: var(--color-bg) var(--gradient-bg); }
+.jui-window-main { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.jui-panel { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 24px; }
+.jui-panel.bare { background: none; border: none; border-radius: 0; overflow: visible; }
+.jui-window-side { flex: none; width: 340px; min-height: 0; display: flex; }
+
+/* rail: features/org/sidebar.ts */
+.jui-rail { flex: none; display: flex; flex-direction: column; width: 104px; background: rgba(255, 255, 255, 0.5); border-right: 1px solid rgba(255, 255, 255, 0.8); border-radius: 18px; }
+.jui-rail-head { position: relative; flex: none; display: flex; align-items: center; justify-content: center; height: 84px; padding: 8px 12px; }
+.jui-rail-head::after, .jui-rail-foot-card::before { content: ''; position: absolute; left: 20px; right: 20px; height: 1px; background: #e1e4ea; }
+.jui-rail-head::after { bottom: 0; }
+.jui-rail-head .jui-logo { margin: 12px; }
+.jui-logo { display: inline-flex; align-items: center; padding: 0 3.945px 0 7.283px; border-radius: 30.041px; background: #23262b; }
+.jui-logo-dots { width: 13.352px; height: 4.855px; fill: #fff; }
+.jui-logo-check { width: 19.421px; height: 19.421px; stroke: #ff6b57; }
+.jui-rail-items { display: flex; flex-direction: column; gap: 4px; padding: 16px 0; }
+.jui-rail-item { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 6px 0; color: #717784; }
+.jui-rail-chip { position: relative; display: flex; padding: 9px; border-radius: 10px; }
+.jui-rail-glyph { display: block; width: 22px; height: 22px; }
+.jui-rail-label { font-size: 10px; line-height: 20px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+.jui-rail-item.active { color: #ff8447; }
+.jui-rail-item.active .jui-rail-chip, .jui-rail-item.open .jui-rail-chip { background: rgba(255, 132, 71, 0.12); }
+.jui-rail-item.open .jui-rail-chip { color: #ff7733; }
+.jui-rail-item.active::before { content: ''; position: absolute; left: -16px; top: 12px; width: 4px; height: 28px; border-radius: 0 4px 4px 0; background: #ff6b57; }
+.jui-rail-dot { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; border-radius: 50%; background: #ff6b57; box-shadow: 0 0 0 2px #fff; }
+.jui-rail-dot.call { width: 9px; height: 9px; background: #1fc16b; }
+.jui-rail-foot { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 14px; padding: 16px 0; color: #525866; }
+.jui-rail-foot > span { position: relative; display: flex; }
+.jui-rail-foot .jui-rail-glyph { width: 24px; height: 24px; }
+.jui-rail-foot .jui-rail-dot { top: -2px; right: -2px; }
+.jui-rail-foot-card { position: relative; flex: none; display: flex; justify-content: center; padding: 12px 0; }
+.jui-rail-foot-card::before { top: 0; }
+
+/* ---------- primitives ---------- */
+/* shared/avatar.ts */
+.jui-avatar { position: relative; display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--s); height: var(--s); border-radius: 50%; font-size: calc(var(--s) * 0.42); font-weight: 600; letter-spacing: 0.01em; line-height: 1; color: hsl(var(--h) 45% 28%); background: hsl(var(--h) 70% 88%); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7); }
+.jui-avatar.photo { color: transparent; box-shadow: none; }
+.jui-avatar[data-presence]::after { content: ''; position: absolute; right: -1px; bottom: -1px; width: max(10px, calc(var(--s) * 0.28)); height: max(10px, calc(var(--s) * 0.28)); border-radius: 50%; background: var(--color-text-soft); opacity: 0.4; box-shadow: 0 0 0 2px #fff; }
+.jui-avatar[data-presence='online']::after { background: var(--color-success); opacity: 1; }
+.jui-avatar[data-presence='away']::after { background: #f2b544; opacity: 1; }
+.jui-avatars { display: inline-flex; align-items: center; }
+.jui-avatars > .jui-avatar { box-shadow: 0 0 0 2px #fff; }
+.jui-avatars > * + * { margin-left: -4px; }
+.jui-more { display: inline-flex; align-items: center; justify-content: center; height: 24px; min-width: 24px; padding: 0 6px; border-radius: 999px; background: #f5f7fa; box-shadow: 0 0 0 2px #fff; font-size: 12px; line-height: 16px; font-weight: 500; color: var(--color-text-muted); }
+
+/* project marks: the header's 44px tile (project-shell.ts), the 40px chat square, the card's 20px tag */
+.jui-project-mark { flex: none; display: grid; place-items: center; width: var(--s); height: var(--s); border-radius: calc(var(--s) * 0.275); background: hsl(var(--h) 60% 45%); color: #fff; font-size: calc(var(--s) * 0.41); font-weight: 700; line-height: 1; }
+.jui-project-tag { display: grid; place-items: center; width: 20px; height: 20px; flex: none; border-radius: 6px; background: hsl(var(--h) 65% 55%); color: #fff; font-size: 11px; font-weight: 500; line-height: 1; }
+
+/* shared/task-ui.ts */
+.jui-flag { display: inline-flex; align-items: center; justify-content: center; gap: 4px; width: 28px; height: 28px; flex: none; border-radius: var(--radius-sm); color: var(--c); background: color-mix(in srgb, var(--c) 14%, white); font-size: var(--text-xs); line-height: var(--text-xs-line); }
+.jui-flag.labelled { width: auto; padding: 0 8px; }
+.jui-flag svg { width: 20px; height: 20px; }
+.jui-type { display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: 6px; font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; color: color-mix(in srgb, var(--c) 80%, black); background: color-mix(in srgb, var(--c) 14%, white); }
+.jui-status { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: var(--text-2xs); line-height: var(--text-2xs-line); font-weight: 500; letter-spacing: var(--track-caps-2xs); text-transform: uppercase; white-space: nowrap; background: color-mix(in srgb, var(--c) 14%, white); color: color-mix(in srgb, var(--c) 80%, black); }
+/* task-detail.ts's Status Badge: a filled check and the colour itself */
+.jui-status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px 4px 4px; border-radius: 6px; background: color-mix(in srgb, var(--c) 12%, white); color: var(--c); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0; white-space: nowrap; }
+.jui-status-badge svg { width: 16px; height: 16px; }
+
+/* buttons: styles.scss .btn family, the chats button (chats-button.ts), add-member (project-shell.ts) */
+.jui-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--color-border); background: rgba(255, 255, 255, 0.85); font-weight: 500; letter-spacing: var(--track-sm); white-space: nowrap; cursor: pointer; color: var(--color-text); }
+.jui-btn svg { width: 16px; height: 16px; }
+.jui-btn.sm { height: 32px; padding: 0 12px; font-size: 13px; border-radius: 8px; }
+.jui-btn.primary { background: var(--color-primary); border-color: transparent; color: #fff; }
+.jui-btn.primary:hover { background: var(--color-primary-hover); }
+.jui-btn.soft { background: rgba(255, 132, 71, 0.12); border-color: rgba(255, 132, 71, 0.3); color: #e2552f; }
+.jui-btn.ghost { background: var(--color-surface); border-color: #fff; color: var(--color-text-muted); padding: 0 12px 0 8px; gap: 4px; border-radius: 8px; }
+.jui-btn.ghost svg { width: 20px; height: 20px; }
+.jui-btn.glass { background: var(--glass-primary); border-color: transparent; color: #fff; border-radius: 999px; height: 42px; padding: 0 20px; box-shadow: 0 10px 24px -10px rgba(189, 57, 44, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
+.jui-btn.glass svg { width: 18px; height: 18px; }
+.jui-btn.white { background: #fff; border-color: var(--color-border); font-size: 13px; height: 32px; padding: 0 12px; border-radius: 8px; }
+.jui-chats-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: none; height: 40px; padding: 0 12px 0 10px; border: 1px solid rgba(255, 132, 71, 0.3); border-radius: 10px; background: rgba(255, 132, 71, 0.12); color: #e2552f; font-size: 14px; font-weight: 500; white-space: nowrap; }
+.jui-chats-btn.active { background: #ff6b57; border-color: #ff6b57; color: #fff; }
+.jui-chats-btn svg { width: 18px; height: 18px; }
+.jui-chats-n { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: #ff6b57; color: #fff; font-size: 11px; line-height: 20px; text-align: center; }
+.jui-chats-btn.active .jui-chats-n { background: #fff; color: #e2552f; }
+.jui-icon-btn { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 9px; background: transparent; color: #525866; }
+.jui-icon-btn svg { width: 18px; height: 18px; }
+.jui-icon-btn.on { background: #eef0f4; color: var(--color-text); }
+
+/* shared/filters.ts */
+.jui-search { display: inline-flex; align-items: center; gap: 8px; padding: 8px 8px 8px 10px; width: 300px; max-width: 100%; min-width: 0; background: var(--color-surface); border: 1px solid var(--color-border-glass); border-radius: 8px; color: var(--color-text-soft); }
+.jui-search svg { width: 20px; height: 20px; }
+.jui-search span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jui-search kbd { font: inherit; flex: none; padding: 2px 6px; border-radius: 4px; background: rgba(255, 255, 255, 0.5); border: 1px solid #fff; font-size: 12px; line-height: 16px; color: var(--color-text-soft); }
+
+/* ---------- project header + tabs (project-shell.ts), board toolbar (project-board-page.ts) ---------- */
+.jui-project-head { flex: none; display: flex; align-items: center; gap: 14px; height: 84px; padding: 0 24px; border-bottom: 1px solid #e1e4ea; }
+.jui-project-who { display: flex; flex-direction: column; }
+.jui-project-name { display: flex; align-items: center; gap: 6px; height: 26px; font-size: 20px; line-height: 26px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; }
+.jui-project-name svg { width: 18px; height: 18px; color: #525866; }
+.jui-project-sub { height: 20px; color: #525866; white-space: nowrap; }
+.jui-spacer { flex: 1; }
+.jui-tabs { flex: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid #e1e4ea; }
+.jui-tabs > span { position: relative; display: flex; align-items: center; justify-content: center; gap: 8px; height: 56px; font-size: 15px; color: #525866; white-space: nowrap; }
+.jui-tabs > span svg { width: 18px; height: 18px; }
+.jui-tabs > span.on { color: #0e121b; font-weight: 500; }
+.jui-tabs > span.on::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: #ff6b57; }
+.jui-tab-count { font-size: 12px; color: #ff6b57; font-weight: 400; }
+.jui-board-toolbar { flex: none; display: flex; align-items: center; gap: 10px; padding: 20px 24px 16px; }
+.jui-board-toolbar h2 { flex: 1; margin: 0; font-size: 20px; line-height: 28px; font-weight: 500; letter-spacing: 0; }
+
+/* ---------- board (shared/board.ts) and card (shared/task-card.ts) ---------- */
+.jui-board-host { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; padding: 0 24px 24px; overflow: hidden; }
+.jui-board-host.compact { padding: 0; overflow: visible; }
+.jui-board { flex: 1; min-width: 0; min-height: 0; display: flex; gap: 12px; align-items: stretch; overflow: hidden; margin-top: -4px; padding: 4px 0 0; }
+.jui-column { flex: 1 0 224px; max-width: 300px; min-width: 0; display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.5); border: 1px solid #fff; border-radius: var(--radius-md); padding: 10px 8px 16px; box-shadow: var(--shadow-sm); transition: background .25s, border-color .25s, transform .35s cubic-bezier(.34, 1.56, .64, 1), box-shadow .25s; }
+.jui-column.over { background: color-mix(in srgb, var(--c) 10%, transparent); border-color: color-mix(in srgb, var(--c) 50%, transparent); transform: translateY(-4px); box-shadow: 0 16px 34px color-mix(in srgb, var(--c) 20%, transparent); }
+.jui-column-head { display: flex; align-items: center; gap: 8px; height: 24px; margin: 0 4px 12px; }
+.jui-column-name { flex: 1; min-width: 0; font-size: 16px; line-height: 24px; font-weight: 600; color: color-mix(in srgb, var(--c) 78%, black); letter-spacing: var(--track-md); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.jui-column-count { flex: none; display: inline-flex; align-items: center; justify-content: center; min-width: 16px; padding: 2px 4px; border-radius: 999px; background: rgba(255, 255, 255, 0.5); font-size: 12px; line-height: 16px; font-weight: 500; color: var(--c); }
+.jui-column-cards { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 0 4px; min-height: 0; overflow: hidden; }
+.jui-add-card { flex: none; height: 175px; display: flex; align-items: center; justify-content: center; background: var(--color-drop-bg); border: 1px dashed var(--color-drop-border); border-radius: var(--radius); color: var(--color-primary); }
+.jui-add-card svg { width: 40px; height: 40px; }
+.jui-drop-slot { flex: none; background: rgba(255, 107, 87, .08); border: 1.5px dashed #ff8a75; border-radius: 12px; }
+/* compact: the home board, Todoist-like (board.ts :host(.compact)) */
+.jui-board.compact { gap: 20px; margin-top: 0; padding: 0; overflow: visible; }
+.jui-board.compact .jui-column { flex: 1 1 286px; min-width: 200px; max-width: 380px; padding: 0; background: none; border: none; border-radius: 12px; box-shadow: none; }
+.jui-board.compact .jui-column.over { background: color-mix(in srgb, var(--c) 6%, transparent); transform: none; box-shadow: none; }
+.jui-board.compact .jui-column-head { height: auto; margin: 0 0 12px; padding: 4px 2px 8px; border-bottom: 2px solid var(--c); }
+.jui-board.compact .jui-column-name { font-size: 15px; font-weight: 600; color: inherit; }
+.jui-board.compact .jui-column-count { background: none; padding: 0; color: var(--color-text-soft); }
+.jui-board.compact .jui-column-cards { flex: 0 1 auto; gap: 8px; padding: 2px; }
+.jui-board.compact .jui-card { border-color: rgba(14, 18, 27, 0.06); box-shadow: 0 1px 2px rgba(10, 13, 20, 0.03); }
+.jui-add-row { flex: none; display: flex; align-items: center; gap: 8px; margin: 2px 2px 0; padding: 8px 4px; color: var(--color-text-muted); font-size: 14px; line-height: 20px; }
+.jui-add-row svg { width: 18px; height: 18px; padding: 2px; color: var(--color-primary); }
+
+.jui-card { display: flex; flex-direction: column; gap: 12px; color: inherit; background: #fff; border: 1px solid #fff; border-radius: 8px; padding: 12px; transition: border-color .15s, transform .25s, box-shadow .25s; }
+.jui-card.highlight { border-color: var(--color-drop-border); }
+.jui-card.lifted { transform: scale(1.05) rotate(-2deg); border-color: #ff8a75; border-radius: 12px; box-shadow: 0 30px 60px rgba(20, 24, 40, .22), 0 8px 18px rgba(255, 107, 87, .18); }
+.jui-card-head { display: flex; flex-direction: column; gap: 8px; }
+.jui-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.jui-due { display: inline-flex; align-items: center; gap: 4px; font-size: 14px; line-height: 20px; letter-spacing: var(--track-sm); color: var(--color-text-muted); white-space: nowrap; }
+.jui-due svg { width: 20px; height: 20px; }
+.jui-due.overdue { color: var(--color-danger); }
+.jui-card-title { font-size: 16px; line-height: 21px; font-weight: 500; letter-spacing: var(--track-md); color: var(--color-text-card); word-break: break-word; }
+.jui-card-who { display: flex; flex-direction: column; gap: 4px; }
+.jui-card-label { font-size: 14px; line-height: 20px; letter-spacing: var(--track-sm); color: var(--color-text-field); }
+.jui-card-row { display: flex; align-items: center; gap: 8px; }
+.jui-card-tags { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.jui-card-num { font-size: 12px; line-height: 16px; color: var(--color-text-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.jui-card-subs { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; line-height: 16px; color: var(--color-text-muted); }
+.jui-card-subs svg { width: 13px; height: 13px; }
+.jui-soft { color: var(--color-text-soft); }
+.jui-card.compact { gap: 10px; padding: 11px; }
+.jui-card.compact .jui-card-title { font-size: 15px; letter-spacing: normal; }
+.jui-card.compact .jui-card-label { display: none; }
+.jui-card.compact .jui-due { font-size: 13px; }
+.jui-card.compact .jui-due svg { width: 16px; height: 16px; }
+.jui-card.compact .jui-card-tags { flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
+
+/* ---------- task list (task-list.ts + styles.scss table) ---------- */
+.jui-table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 24px; overflow: hidden; }
+.jui-table th, .jui-table td { text-align: left; padding: 12px; border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+.jui-table tr:last-child td { border-bottom: none; }
+.jui-table th { font-size: 12px; line-height: 16px; color: var(--color-text-muted); font-weight: 500; }
+.jui-td-code { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.jui-td-title { font-weight: 500; }
+.jui-td-overdue { color: var(--color-danger); }
+.jui-user { display: inline-flex; align-items: center; gap: 8px; min-width: 0; white-space: nowrap; }
+
+/* ---------- chats panel (chats-panel.css, chat-folder.ts) ---------- */
+.jui-chats { flex: 1; min-width: 0; display: flex; overflow: hidden; background: rgba(255, 255, 255, .86); border: 1px solid rgba(255, 255, 255, .9); border-radius: 24px; box-shadow: 0 12px 40px rgba(20, 24, 40, .12); }
+.jui-chats.flat { box-shadow: none; }
+.jui-chats-list { flex: none; width: 340px; display: flex; flex-direction: column; min-height: 0; }
+.jui-chats.expanded .jui-chats-list { border-right: 1px solid #e1e4ea; }
+.jui-chats.full .jui-chats-list { width: 100%; }
+.jui-chats-head { flex: none; display: flex; align-items: center; gap: 2px; padding: 14px 10px 8px 16px; }
+.jui-chats-head h2 { flex: 1; margin: 0; font-size: 17px; line-height: 24px; font-weight: 600; letter-spacing: var(--track-sm); }
+.jui-chats-tabs { flex: none; display: flex; padding: 0 6px; border-bottom: 1px solid #e1e4ea; overflow: hidden; }
+.jui-chats-tabs > span { position: relative; flex: none; display: flex; align-items: center; gap: 5px; height: 36px; padding: 0 9px; font-size: 13px; font-weight: 500; white-space: nowrap; color: #717784; }
+.jui-chats-tabs > span.on { color: #0e121b; }
+.jui-chats-tabs > span.on::after { content: ''; position: absolute; left: 8px; right: 8px; bottom: -1px; height: 3px; border-radius: 3px 3px 0 0; background: #ff6b57; }
+.jui-tab-badge { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: #e1e4ea; color: #525866; font-size: 11px; line-height: 18px; font-weight: 600; text-align: center; }
+.jui-chats-tabs .on .jui-tab-badge { background: #ff6b57; color: #fff; }
+.jui-chats-rows { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 4px 6px; overflow: hidden; }
+.jui-chats-section { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 12px 10px 4px; font-size: 11px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: #99a0ae; }
+.jui-chats-section svg { width: 16px; height: 16px; stroke-width: 2; }
+.jui-chat-row { display: flex; align-items: center; gap: 10px; width: 100%; height: 56px; padding: 0 8px; border-radius: 12px; flex: none; }
+.jui-chat-row.on { background: rgba(255, 107, 87, .1); }
+.jui-chat-mark { position: relative; flex: none; display: inline-grid; place-items: center; width: 40px; height: 40px; font-size: 15px; font-weight: 600; line-height: 1; }
+.jui-chat-mark.square { border-radius: 11px; background: hsl(var(--h) 60% 45%); color: #fff; }
+.jui-chat-mark.grey, .jui-chat-mark.room { border-radius: 11px; background: #eef0f4; color: #525866; }
+.jui-chat-mark.room { font-size: 13px; }
+.jui-chat-mark.room.live { background: #dcf5e7; color: #1a9a55; }
+.jui-chat-dot { position: absolute; right: -2px; bottom: -2px; width: 12px; height: 12px; border-radius: 50%; background: #1fc16b; border: 2px solid #fff; }
+.jui-chat-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.jui-chat-line { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.jui-chat-line b { flex: 1; min-width: 0; font-size: 14px; line-height: 20px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jui-chat-line time { flex: none; font-size: 12px; line-height: 16px; color: #99a0ae; }
+.jui-chat-preview { flex: 1; min-width: 0; font-size: 13px; line-height: 18px; color: #717784; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jui-chat-preview.live { color: #1a9a55; }
+.jui-chat-count { flex: none; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #ff6b57; color: #fff; font-size: 11px; line-height: 18px; font-weight: 600; text-align: center; }
+.jui-chat-pin { width: 13px; height: 13px; color: #99a0ae; }
+.jui-chat-chev { width: 16px; height: 16px; color: #99a0ae; stroke-width: 2; }
+.jui-chats-pick { flex: 1; display: grid; place-items: center; background: rgba(238, 240, 244, .45); }
+.jui-chats-pick span { padding: 6px 14px; border-radius: 10px; background: rgba(14, 18, 27, .06); color: #525866; }
+
+/* conversation (chat-conversation.ts, message-pane.ts) */
+.jui-conv { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.jui-conv-head { flex: none; display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 8px 0 6px; border-bottom: 1px solid #e1e4ea; }
+.jui-conv-gap { flex: none; width: 10px; }
+.jui-conv-sq { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; background: #eef0f4; color: #525866; font-size: 14px; font-weight: 600; flex: none; }
+.jui-conv-sq.ai { background: #23262b; color: #fff; }
+.jui-conv-who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.jui-conv-name { font-size: 14px; line-height: 20px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jui-conv-sub { font-size: 12px; line-height: 16px; color: #717784; white-space: nowrap; }
+.jui-conv-sub.online { color: var(--color-success); }
+.jui-pane { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 24px 24px 0; background: rgba(238, 240, 244, .45); }
+.jui-pane.docked { padding: 14px 16px 0; }
+.jui-feed { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 10px; padding-bottom: 24px; }
+.jui-day { text-align: center; color: var(--color-text-soft); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: var(--track-caps); text-transform: uppercase; }
+.jui-msg { position: relative; display: flex; align-items: flex-end; gap: 8px; }
+.jui-msg.mine { flex-direction: row-reverse; }
+.jui-msg.cont { margin-top: -7px; }
+.jui-msg-gap { flex: none; width: 32px; }
+.jui-msg-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; max-width: min(100%, 560px); }
+.jui-msg.mine .jui-msg-body { align-items: flex-end; }
+.jui-bubble { display: flex; flex-direction: column; gap: 2px; padding: 6px 10px 6px 12px; background: rgba(255, 255, 255, 0.72); border-radius: 12px; }
+.jui-msg.tail .jui-bubble { border-bottom-left-radius: 4px; }
+.jui-msg.mine .jui-bubble { background: var(--color-primary-soft); }
+.jui-msg.mine.tail .jui-bubble { border-radius: 12px 12px 4px; }
+.jui-author { font-size: 14px; line-height: 20px; font-weight: 600; color: hsl(var(--h) 55% 42%); }
+.jui-text { white-space: pre-wrap; word-break: break-word; font-size: 16px; line-height: 24px; letter-spacing: var(--track-md); }
+.jui-pane.docked .jui-text { font-size: 14px; line-height: 20px; letter-spacing: var(--track-sm); }
+.jui-stamp { float: right; display: inline-flex; align-items: center; gap: 4px; margin: 7px 0 0 10px; font-size: 12px; line-height: 14px; color: var(--color-text-soft); white-space: nowrap; letter-spacing: 0; }
+.jui-pane.docked .jui-stamp { margin-top: 4px; }
+.jui-stamp svg { width: 15px; height: 15px; color: var(--color-primary); }
+.jui-task-chip { position: relative; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 8px 12px 8px 8px; border-radius: 8px; border: 1px solid var(--color-border-glass); background: color-mix(in srgb, var(--c) 12%, white); color: var(--color-text-muted); font-size: 12px; line-height: 16px; letter-spacing: 0; }
+.jui-task-chip svg { width: 16px; height: 16px; color: color-mix(in srgb, var(--c) 80%, black); }
+.jui-chip-ttl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; font-weight: 500; color: color-mix(in srgb, var(--c) 70%, black); }
+.jui-task-chip.ahead { background: var(--color-info-bg); }
+.jui-task-chip.ahead svg, .jui-task-chip.ahead .jui-chip-ttl { color: var(--color-info-text); }
+.jui-task-chip.due { background: var(--color-overdue-bg); }
+.jui-task-chip.due svg, .jui-task-chip.due .jui-chip-ttl { color: var(--color-overdue-text); }
+.jui-task-chip.due::before { content: ''; position: absolute; top: 4px; left: 4px; width: 4px; height: 4px; border-radius: 50%; background: var(--color-primary); }
+.jui-file-chip { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; padding: 8px 12px 8px 8px; border-radius: 8px; border: 1px solid var(--color-border-glass); background: rgba(255, 255, 255, 0.6); font-size: 12px; line-height: 16px; letter-spacing: 0; }
+.jui-file-chip svg { width: 16px; height: 16px; color: var(--color-text-muted); }
+.jui-file-chip b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.jui-file-chip span { color: var(--color-text-soft); }
+/* shared/call-record.ts */
+.jui-call-record { display: inline-flex; align-items: center; gap: 12px; padding: 4px 4px 4px 0; min-width: 200px; }
+.jui-call-ico { --tint: var(--color-success); position: relative; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 15px; flex: none; color: var(--tint); background: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.55)); border: 1px solid rgba(255, 255, 255, 0.95); box-shadow: inset 0 1px 0 #fff, 0 2px 8px rgba(48, 57, 82, 0.08); }
+.jui-call-ico svg { width: 20px; height: 20px; }
+.jui-call-record.bad .jui-call-ico { --tint: var(--color-danger); background: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(253, 236, 236, 0.8)); }
+.jui-call-record.bad b { color: var(--color-danger); }
+.jui-call-dir { position: absolute; right: -4px; bottom: -4px; width: 16px; height: 16px; border-radius: 50%; background: var(--tint); border: 2px solid #fff; box-shadow: 0 1px 3px rgba(48, 57, 82, 0.2); }
+.jui-call-dir::after { content: ''; position: absolute; inset: 4px; border-right: 1.5px solid #fff; border-top: 1.5px solid #fff; transform: translate(-1px, 1px) rotate(45deg); }
+.jui-call-dir.in::after { transform: translate(1px, -1px) rotate(-135deg); }
+.jui-call-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.jui-call-txt b { font-weight: 600; font-size: 14px; line-height: 20px; color: var(--color-text); }
+.jui-call-txt span { color: var(--color-text-muted); font-size: 12px; line-height: 16px; font-variant-numeric: tabular-nums; }
+.jui-call-when { align-self: flex-end; margin-left: 10px; color: var(--color-text-soft); font-size: 12px; line-height: 14px; white-space: nowrap; }
+/* composer */
+.jui-composer { position: relative; z-index: 1; flex: none; display: flex; flex-direction: column; gap: 8px; min-height: 148px; margin: -36px -24px 0; padding: 16px; background: rgba(245, 247, 250, 0.6); -webkit-backdrop-filter: blur(24px) saturate(1.4); backdrop-filter: blur(24px) saturate(1.4); border: 1px solid var(--color-border-glass); border-radius: 0 0 23px 23px; }
+.jui-composer.docked { min-height: 0; margin: 0 -16px; }
+.jui-composer-text { flex: 1; color: #666f7f; font-size: 14px; line-height: 20px; min-height: 40px; }
+.jui-composer-text.typed { color: var(--color-text); }
+.jui-composer-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.jui-tools { display: flex; align-items: center; gap: 6px; }
+.jui-tool { display: grid; place-items: center; padding: 10px; border-radius: 10px; background: rgba(255, 255, 255, 0.7); color: var(--color-text-muted); }
+.jui-composer.docked .jui-tool { padding: 6px; }
+.jui-tool svg { width: 20px; height: 20px; }
+.jui-send { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 16px; border-radius: 10px; border: 1px solid #fff; background: var(--color-primary-send); color: #fff; font-weight: 500; }
+.jui-send.disabled { opacity: 0.55; }
+.jui-send svg { width: 20px; height: 20px; }
+
+/* ---------- Jamo AI (chats-panel-assistant.ts, effect-card.ts) ---------- */
+.jui-ai { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 12px; background: rgba(238, 240, 244, .45); }
+.jui-ai-scroll { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 4px 16px 12px; overflow: hidden; }
+.jui-ai-intro { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
+.jui-ai-face { margin-bottom: 12px; }
+.jui-ai-intro h3 { margin: 0; font-size: 20px; line-height: 28px; font-weight: 600; letter-spacing: var(--track-sm); }
+.jui-ai-intro p { margin: 0; max-width: 260px; color: var(--color-text-muted); }
+.jui-ai-msg { align-self: flex-start; max-width: 90%; margin: 0; padding: 8px 12px; border-radius: 6px 18px 18px 18px; background: #fff; border: 1px solid #ecebe9; font-size: 14px; line-height: 1.5; }
+.jui-ai-msg.mine { align-self: flex-end; border-radius: 18px 18px 6px 18px; background: rgba(255, 255, 255, .7); }
+.jui-ai-starters { flex: none; display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 10px; }
+.jui-ai-starters > span { padding: 6px 12px; border: 1px solid #fff; border-radius: 999px; background: rgba(255, 255, 255, .75); font-size: 13px; line-height: 18px; }
+.jui-ai-starters > span.on { background: #fff; box-shadow: 0 0 0 2px var(--color-primary); }
+.jui-ai-composer { flex: none; display: flex; align-items: center; gap: 8px; margin: 0 16px 10px; padding: 8px 8px 8px 14px; border: 1px solid #fff; border-radius: 14px; background: rgba(255, 255, 255, .85); }
+.jui-ai-composer > span:not(.jui-mic) { flex: 1; min-width: 0; color: var(--color-text-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jui-ai-composer > span.typed { color: var(--color-text); }
+.jui-ai-composer i { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 10px; background: #23262b; color: #fff; }
+.jui-ai-composer i svg { width: 16px; height: 16px; }
+/* assistant/jamo/voice/jamo-mic.ts */
+.jui-mic { position: relative; display: flex; align-items: center; gap: 4px; flex: none; }
+.jui-mic button { font: inherit; cursor: pointer; }
+.jui-mic-btn { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: none; border-radius: 10px; background: transparent; color: #4a4e56; }
+.jui-mic-btn:hover { background: rgba(35, 38, 43, .06); }
+.jui-mic-btn.gear { width: 28px; color: #8a8f97; }
+.jui-mic svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.jui-mic-stop { position: relative; display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border: none; border-radius: 999px; background: #ff6b57; color: #fff; font-size: 12px; font-variant-numeric: tabular-nums; }
+.jui-mic-ring { position: absolute; inset: -3px; border-radius: 999px; border: 2px solid rgba(255, 107, 87, .45); pointer-events: none; transition: transform 80ms linear; }
+.jui-mic-dot { width: 8px; height: 8px; border-radius: 2px; background: #fff; }
+.jui-ai-disclaimer { flex: none; margin: 0; padding: 0 16px 14px; color: var(--color-text-soft); font-size: 11px; line-height: 16px; text-align: center; }
+.jui-effect { display: grid; gap: 4px; padding: 12px 14px; border-radius: 18px; background: #fff; border: 1px solid #ecebe9; box-shadow: 0 1px 2px rgba(35, 38, 43, .06); }
+.jui-effect.undone { opacity: .6; }
+.jui-effect-label { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.jui-mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: #8a8f97; }
+.jui-mono.code { color: #e05540; text-transform: none; letter-spacing: 0; font-size: 12px; }
+.jui-effect-badge { margin-left: auto; padding: 2px 8px; border-radius: 999px; background: rgba(255, 107, 87, .12); color: #c24a35; font-size: 11px; line-height: 16px; }
+.jui-effect-badge.off { background: #f7f5f3; color: #6b7079; }
+.jui-effect-title { margin: 0; font-weight: 600; font-size: 14px; line-height: 20px; color: #23262b; }
+.jui-effect-meta { margin: 0; font-size: 12px; line-height: 16px; color: #6b7079; }
+.jui-effect-actions { display: flex; gap: 12px; margin-top: 2px; }
+.jui-effect-actions button { padding: 0; border: none; background: none; font-size: 12px; color: #e05540; cursor: pointer; }
+.jui-effect-actions button:hover { color: #c24a35; }
+/* call-float.css .toast */
+.jui-toast { display: inline-flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 14px; background: #23262b; color: #fff; font-size: 14px; line-height: 20px; box-shadow: 0 12px 32px rgba(14, 18, 27, 0.24); }
+.jui-toast button { padding: 0; border: 0; background: none; color: #ff8a75; font-weight: 500; cursor: pointer; }
+
+/* ---------- calendar (calendar.ts, calendar-schedule.css) ---------- */
+.jui-cal { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 24px; }
+.jui-cal-bar { flex: none; display: flex; align-items: center; gap: 8px; padding: 0 0 12px; }
+.jui-cal-period { margin: 0 8px 0 0; font-size: 24px; line-height: 32px; font-weight: 600; letter-spacing: -.02em; white-space: nowrap; }
+.jui-cal-step { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; color: var(--color-text-muted); }
+.jui-cal-step svg { width: 20px; height: 20px; stroke-width: 1.7; }
+.jui-cal-views { display: inline-flex; padding: 3px; border: 1px solid rgba(255, 255, 255, .8); border-radius: 10px; background: rgba(255, 255, 255, .4); }
+.jui-cal-views > span { padding: 4px 12px; border-radius: 7px; font-size: 14px; line-height: 20px; color: var(--color-text-muted); white-space: nowrap; }
+.jui-cal-views > span.on { color: var(--color-text); background: rgba(255, 255, 255, .85); box-shadow: 0 2px 4px #1b1c1d0a, inset 0 1px 0 #fff; }
+.jui-cal-legend { flex: none; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 0 0 16px; }
+.jui-legend-chip { flex: none; display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px 0 10px; border: 1px solid #fff; border-radius: 999px; background: rgba(255, 255, 255, .75); font-size: 13px; white-space: nowrap; }
+.jui-legend-chip i { width: 10px; height: 10px; border-radius: 50%; background: var(--dot); }
+.jui-legend-chip svg { width: 14px; height: 14px; color: var(--color-text-muted); }
+.jui-legend-rule { width: 1px; height: 20px; margin: 0 4px; background: var(--color-border); }
+.jui-schedule { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 16px; background: rgba(255, 255, 255, 0.55); --hour: 70px; --pad: 12px; }
+.jui-schedule-head, .jui-hour-grid { display: grid; grid-template-columns: 60px repeat(var(--days), minmax(0, 1fr)); }
+.jui-schedule-head { flex: none; border-bottom: 1px solid var(--color-border); }
+.jui-schedule-date { display: flex; align-items: center; gap: 8px; padding: 10px var(--pad); }
+.jui-wd { font-size: 12px; line-height: 20px; color: var(--color-text-muted); }
+.jui-dnum { display: grid; place-items: center; min-width: 28px; height: 28px; border-radius: 14px; font-size: 14px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
+.jui-schedule-date.today .jui-dnum { background: var(--color-primary); color: #fff; }
+.jui-hour-scroll { flex: 1; min-height: 0; overflow: hidden; }
+.jui-hour-grid { position: relative; }
+.jui-hour-labels > div { height: var(--hour); padding: 0 10px; font-size: 11px; line-height: 14px; color: var(--color-text-soft); font-variant-numeric: tabular-nums; transform: translateY(-7px); }
+.jui-hour-labels > div:first-child { transform: none; }
+.jui-hour-column { position: relative; border-left: 1px solid rgba(225, 228, 234, 0.7); background: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--hour) - 1px), rgba(225, 228, 234, 0.6) calc(var(--hour) - 1px), rgba(225, 228, 234, 0.6) var(--hour)); }
+.jui-hour-column.drop { background-color: rgba(255, 107, 87, 0.07); }
+.jui-timed-layer { position: absolute; inset: 0 4px; }
+.jui-event { position: absolute; left: 0; right: 0; z-index: 2; display: block; padding: 4px 8px; min-height: 16px; overflow: hidden; font-size: 12px; line-height: 16px; border-radius: 8px; background: color-mix(in oklch, var(--ev) 14%, white); color: var(--color-text); transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), box-shadow .2s; }
+.jui-event.ghost { background: rgba(255, 255, 255, .6); box-shadow: inset 0 0 0 1.5px var(--ev); border: 1px dashed transparent; }
+.jui-event.found { box-shadow: 0 0 0 2px var(--color-primary), 0 10px 24px -10px rgba(255, 107, 87, .6); }
+.jui-event b { display: block; font-weight: 500; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jui-event span { display: block; color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+/* A short event is one line, centred in its height (EventBlock sets the padding). Where the title and
+   the time don't both fit, the time wraps onto a second line, out of sight, and the title keeps the row. */
+.jui-event.compact { display: flex; flex-wrap: wrap; gap: 40px 6px; }
+.jui-event.compact b { flex: 0 1 auto; min-width: 0; }
+.jui-event.compact .jui-ev-at { flex: none; opacity: .7; }
+.jui-now { position: absolute; left: 0; right: 0; z-index: 4; height: 2px; background: var(--color-primary); }
+.jui-now::before { content: ''; position: absolute; left: -5px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: var(--color-primary); }
+
+/* ---------- drive (drive.css) ---------- */
+.jui-drive { flex: 1; min-height: 0; display: flex; }
+.jui-drive-side { flex: none; width: 236px; display: flex; flex-direction: column; gap: 2px; padding: 20px 14px; border-right: 1px solid var(--glass-divider); background: var(--glass-sidebar); }
+.jui-drive-switch { display: grid; grid-template-columns: 1fr 1fr; padding: 3px; margin-bottom: 12px; border-radius: 12px; background: rgba(255, 255, 255, .45); border: 1px solid var(--color-border-glass); }
+.jui-drive-switch > span { display: grid; place-items: center; height: 38px; border-radius: 10px; font-size: 15px; color: var(--color-text-soft); }
+.jui-drive-switch > span.on { background: #fff; color: var(--color-text); font-weight: 500; box-shadow: var(--shadow-sm); }
+.jui-drive-disk { display: flex; align-items: center; gap: 10px; padding: 6px 4px 6px 6px; margin-bottom: 18px; font-size: 15px; font-weight: 600; }
+.jui-drive-disk i { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: #fff; color: #c2412e; box-shadow: var(--glass-inset), var(--shadow-sm); }
+.jui-drive-disk i svg { width: 18px; height: 18px; }
+.jui-drive-add { margin-left: auto; color: var(--color-text-muted); }
+.jui-drive-lbl { padding: 14px 10px 6px; font-size: 12px; font-weight: 500; color: var(--color-text-muted); }
+.jui-drive-item { display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 10px; border-radius: 12px; color: var(--color-text-muted); }
+.jui-drive-item svg { width: 18px; height: 18px; }
+.jui-drive-item.on { background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(255, 233, 229, 0.7)); color: var(--glass-accent); font-weight: 500; box-shadow: var(--glass-inset); }
+.jui-drive-content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.jui-drive-top { display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 14px 20px; background: var(--glass-sidebar); border-bottom: 1px solid var(--glass-divider); color: var(--color-text-muted); font-size: 13px; }
+.jui-drive-top svg { width: 18px; height: 18px; }
+.jui-drive-body { padding: 46px 48px; }
+.jui-drive-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.jui-drive-header h1 { font-size: 30px; line-height: 1.3; font-weight: 600; letter-spacing: -0.045em; margin: 0 0 8px; font-variation-settings: 'opsz' 32; }
+.jui-drive-header p { color: var(--color-text-muted); margin: 0; font-size: 13px; line-height: 1.6; }
+.jui-drive-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 36px 0 14px; color: var(--color-text-muted); font-size: 12px; }
+.jui-view-switch { display: flex; padding: 3px; gap: 2px; background: var(--glass-sidebar); border: 1px solid var(--color-border-glass); border-radius: 999px; box-shadow: var(--glass-inset); }
+.jui-view-switch > span { display: grid; place-items: center; width: 36px; height: 32px; border-radius: 999px; color: var(--color-text-muted); }
+.jui-view-switch > span.on { color: var(--glass-accent); background: rgba(255, 255, 255, .8); }
+.jui-view-switch svg { width: 15px; height: 15px; }
+.jui-drive-row, .jui-drive-heading { display: grid; grid-template-columns: minmax(160px, 1fr) 140px 100px 75px 32px; gap: 16px; align-items: center; padding: 0 14px; }
+.jui-drive-heading { min-height: 38px; background: var(--glass-control); border: 1px solid var(--color-border-glass); border-radius: 12px; color: var(--color-text-muted); font-size: 11px; }
+.jui-drive-heading > :nth-child(4), .jui-drive-size { text-align: right; }
+.jui-drive-row { min-height: 72px; border-radius: 12px; border-bottom: 1px solid var(--glass-divider); transition: background .2s; }
+.jui-drive-row.on { background: var(--glass-hover); }
+.jui-drive-name { display: flex; align-items: center; gap: 12px; min-width: 0; font-size: 13px; font-weight: 500; color: var(--color-text-card); }
+.jui-drive-name span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jui-file-icon { color: #5673a4; flex: none; width: 38px; height: 42px; display: grid; place-items: center; background: linear-gradient(150deg, #ffffffc9, #dae7fb9c); border: 1px solid var(--color-border-glass); box-shadow: var(--glass-inset); border-radius: 12px; }
+.jui-file-icon.folder { color: #a16b26; background: linear-gradient(150deg, #fff7dfdc, #f5d89b70); }
+.jui-file-icon.picture { color: #427d69; background: linear-gradient(150deg, #f1fff9d9, #c3e9d894); }
+.jui-file-icon svg { width: 20px; height: 20px; }
+.jui-drive-muted { color: var(--color-text-muted); font-size: 12px; min-width: 0; font-variant-numeric: tabular-nums; }
+.jui-drive-more { color: var(--color-text-muted); display: grid; place-items: center; }
+.jui-drive-more svg { width: 18px; height: 18px; }
+
+/* ---------- task detail (task-overlay.ts, task-detail.ts) ---------- */
+.jui-detail { display: flex; flex-direction: column; overflow: hidden; border-radius: 28px; background: rgba(255, 255, 255, 0.7); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); }
+.jui-detail.solid { background: rgba(255, 255, 255, 0.92); box-shadow: 0 30px 80px -30px rgba(20, 24, 40, .35); }
+.jui-detail-head { flex: none; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 22px 22px 18px; border-bottom: 1px solid var(--color-border); }
+.jui-detail-title { font-size: 18px; line-height: 24px; font-weight: 500; letter-spacing: var(--track-lg); }
+.jui-detail-sub { display: flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; color: var(--color-text-muted); }
+.jui-detail-num { color: var(--color-text-soft); }
+.jui-detail-actions { display: flex; gap: 6px; }
+.jui-detail-actions > span { display: grid; place-items: center; padding: 10px; border-radius: 10px; background: rgba(255, 255, 255, 0.2); color: var(--color-text-muted); }
+.jui-detail-actions > span.strong { background: var(--color-bg-weak); color: var(--color-text); }
+.jui-detail-actions svg { width: 20px; height: 20px; }
+.jui-detail-cols { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 36%; }
+.jui-detail-main { min-width: 0; padding: 24px 16px 22px 22px; overflow: hidden; }
+.jui-detail-meta { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 12px 64px; padding-bottom: 24px; border-bottom: 1px solid var(--color-border); margin-bottom: 24px; }
+.jui-detail-group { display: grid; grid-template-columns: 108px minmax(0, auto); column-gap: 24px; row-gap: 12px; align-items: center; }
+.jui-k { font-size: 14px; line-height: 20px; color: var(--color-text-muted); }
+.jui-v { display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 500; }
+.jui-v.blank { color: var(--color-text-soft); font-weight: 400; }
+.jui-detail-section { margin-bottom: 20px; }
+.jui-detail-section h4 { margin: 0 0 10px; font-size: 14px; line-height: 20px; font-weight: 400; color: var(--color-text-muted); }
+.jui-detail-section p { margin: 0; color: var(--color-text-card); line-height: 22px; }
+.jui-check { display: flex; align-items: center; gap: 10px; padding: 6px 0; color: var(--color-text-card); }
+button.jui-check { width: 100%; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; }
+.jui-check i { width: 18px; height: 18px; flex: none; border-radius: 6px; border: 1.5px solid var(--color-border-strong); background: var(--color-surface-strong); display: grid; place-items: center; }
+.jui-check.done i { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.jui-check.done i svg { width: 12px; height: 12px; stroke-width: 3; }
+.jui-check.done span { color: var(--color-text-muted); text-decoration: line-through; text-decoration-color: var(--color-text-soft); }
+.jui-detail-side { display: flex; flex-direction: column; min-height: 0; padding: 0 22px 22px; border-left: 1px solid var(--color-border); }
+.jui-detail-tabs { display: flex; gap: 32px; border-bottom: 1px solid var(--color-border); margin-bottom: 16px; }
+.jui-detail-tabs > span { position: relative; padding: 18px 0 12px; font-size: 15px; color: var(--color-text-muted); }
+.jui-detail-tabs > span.on { color: var(--color-text); font-weight: 500; }
+.jui-detail-tabs > span.on::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--color-primary); border-radius: 2px; }
+.jui-comment { display: flex; gap: 10px; margin-bottom: 14px; }
+.jui-comment-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.jui-comment-body b { font-weight: 600; font-size: 13px; }
+.jui-comment-body b time { margin-left: 6px; font-weight: 400; color: var(--color-text-soft); font-size: 12px; }
+.jui-comment-body span { color: var(--color-text-card); line-height: 20px; }
+.jui-comment-box { margin-top: auto; display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 16px; background: rgba(255, 255, 255, 0.7); border: 1px solid var(--color-border-glass); color: var(--color-text-soft); }
+.jui-comment-box div { display: flex; justify-content: space-between; align-items: center; }
+
+/* ---------- calls (call-room.css, call-stage.css, call-control.ts) ---------- */
+.jui-call { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 20px; }
+.jui-call.panel { border: 1px solid rgba(255, 255, 255, 0.85); border-radius: 24px; background: rgba(255, 255, 255, 0.55); }
+.jui-call-top { flex: none; display: flex; align-items: center; gap: 12px; padding: 4px 4px 12px; }
+.jui-clock { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 999px; background: #e0faec; color: #0b7a3f; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.jui-call-ident { flex: 1; min-width: 0; }
+.jui-call-title { font-size: 20px; line-height: 28px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jui-call-context { color: #525866; font-size: 13px; line-height: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jui-call-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 12px; }
+.jui-tile { position: relative; display: grid; place-items: center; min-width: 0; min-height: 0; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 20px; background: linear-gradient(160deg, hsl(var(--hue, 220) 45% 93%), hsl(calc(var(--hue, 220) + 30) 40% 84%)); transition: box-shadow .25s; }
+.jui-tile.speaking { box-shadow: 0 0 0 3px #ff6b57; }
+.jui-tile-tag { position: absolute; left: 10px; bottom: 10px; max-width: calc(100% - 20px); display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.85); color: #0e121b; font-size: 12px; line-height: 20px; font-weight: 500; white-space: nowrap; }
+.jui-tile-bars { width: 14px; height: 12px; color: #ff7733; stroke-width: 2; }
+.jui-tile-muted { width: 13px; height: 13px; color: #fb3748; }
+.jui-tile-chip { position: absolute; top: 12px; right: 12px; display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: 6px; background: rgba(255, 255, 255, 0.7); color: #525866; font-size: 11px; white-space: nowrap; }
+.jui-controls { flex: none; display: flex; align-items: flex-end; justify-content: center; gap: 12px; padding: 12px 0 4px; }
+.jui-control { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.jui-control-face { position: relative; display: grid; place-items: center; width: 52px; height: 52px; border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 16px; background: #fff; color: #0e121b; box-shadow: 0 1px 2px rgba(10, 13, 20, 0.05); }
+.jui-control-face svg { width: 22px; height: 22px; stroke-width: 1.7; }
+.jui-control.on .jui-control-face { background: rgba(255, 107, 87, 0.12); color: #e2552f; }
+.jui-control.off .jui-control-face { background: #ffe5e7; color: #c3202f; }
+.jui-control-label { color: #525866; font-size: 11px; line-height: 20px; }
+.jui-control-badge { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: #ff6b57; color: #fff; font-size: 11px; line-height: 18px; text-align: center; }
+.jui-control-divider { width: 1px; height: 40px; margin: 0 6px 20px; background: #e1e4ea; }
+.jui-leave { display: inline-flex; align-items: center; gap: 8px; height: 52px; padding: 0 20px; margin-bottom: 26px; border-radius: 999px; background: #fb3748; color: #fff; font-size: 14px; font-weight: 500; box-shadow: 0 1px 2px rgba(10, 13, 20, 0.05); }
+.jui-leave svg { width: 22px; height: 22px; stroke-width: 1.7; }
+
+/* ---------- home header (home-page "Мои задачи") ---------- */
+.jui-home-head { display: flex; align-items: center; gap: 12px; padding: 4px 4px 24px; }
+.jui-home-head h1 { margin: 0; font-size: 32px; line-height: 40px; font-weight: 600; letter-spacing: -0.02em; font-variation-settings: 'opsz' 32; }
+.jui-home-head p { margin: 4px 0 0; color: var(--color-text-muted); }
+.jui-home-stats { display: flex; gap: 14px; }
+.jui-home-over { color: var(--color-danger); }
+
+/* the scaler: a fixed-size window drawn into whatever width it is given */
+.jui-scaled { position: relative; width: 100%; overflow: hidden; }
+.jui-scaled > .jui-scaled-in { position: absolute; top: 0; left: 0; transform-origin: 0 0; }

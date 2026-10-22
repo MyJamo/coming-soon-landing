@@ -1,10 +1,7 @@
-/* The design's <helmet> styles, verbatim, plus the two style-hover rules as classes. */
-body { margin: 0; background: #f7f1ee; font-family: 'Onest', system-ui, sans-serif; -webkit-font-smoothing: antialiased; color: #0e121b; }
+/* Global on purpose: the reset, and JamoFace's keyframes.
+   Everything else is scoped: the landing under .sk / .skj, the app-UI kit under .jui. */
 *, *::before, *::after { box-sizing: border-box; }
-a { color: #e2552f; text-decoration: none; }
-a:hover { color: #b8401f; }
-input::placeholder { color: #99a0ae; }
-@keyframes caret { 50% { opacity: 0; } }
+body { margin: 0; -webkit-font-smoothing: antialiased; }
 @keyframes jamoBounce { 0%,60%,100% { transform: translateY(0); opacity: .6 } 30% { transform: translateY(-45%); opacity: 1 } }
 @keyframes jamoHop { 0%,100% { transform: translateY(0) } 30% { transform: translateY(-7px) } 50% { transform: translateY(0) } 60% { transform: translateY(-3px) } 75% { transform: translateY(0) } }
 @keyframes jamoBob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-3px) } }
@@ -20,6 +17,3 @@ input::placeholder { color: #99a0ae; }
 @keyframes jamoBulk { 0% { transform: scale(0) } 60% { transform: scale(1.25) } 80% { transform: scale(.92) } 100% { transform: scale(1) } }
 @keyframes jamoListenSway { 0%,100% { transform: rotate(-4deg) translateY(0) } 50% { transform: rotate(-3deg) translateY(-1.5px) } }
 @keyframes jamoListenIn { 0% { transform: translateX(var(--dx)) scale(1.15); opacity: 0 } 35% { opacity: 1 } 100% { transform: translateX(0) scale(.8); opacity: 0 } }
-
-.cta { background: #0e121b; }
-.cta:hover { background: #2b303b; }

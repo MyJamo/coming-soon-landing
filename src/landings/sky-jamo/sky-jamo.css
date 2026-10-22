@@ -1,0 +1,555 @@
+/* Option 04: what it adds to 02's sky.css. Everything is scoped under .skj, which sits on 02's .sk root. */
+.skj { --hand: 'Marck Script', cursive; --pencil: #c4402a; }
+.skj-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------- Smooth scrolling ---------- */
+/* The sun moves by transform, not left/top, and the sky's layers are their own; scrolling repaints neither. */
+.skj .sk-sun { left: 0; top: 0; transform: translate3d(calc(var(--sk-sun-x) - 50%), calc(var(--sk-sun-y) - 50%), 0); will-change: transform; }
+.skj .sk-cloud { will-change: transform; }
+/* One frosted pane per window instead of one per panel inside it: the sky changes under the glass on
+   every frame of scrolling, and each nested backdrop blur is redone each time. */
+.skj .jui-panel, .skj .jui-rail, .skj .jui-chats { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.skj .jui-panel { background: rgba(255, 255, 255, .62); }
+.skj .jui-rail { background: rgba(255, 255, 255, .34); }
+.skj .sk-scaled { -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); }
+
+/* ---------- Centred: each heading and its copy over what it shows ---------- */
+.skj .sk-head { align-items: center; text-align: center; }
+.skj .sk-head p { max-width: 40em; }
+.skj .sk-moment, .skj .sk-moment.flip { display: flex; flex-direction: column; align-items: center; gap: 52px; max-width: 1180px; min-height: 0; padding: 120px 32px 180px; }
+.skj .sk-moment-copy, .skj .sk-moment.flip .sk-moment-copy { order: 0; align-items: center; text-align: center; max-width: 720px; }
+.skj .sk-moment-copy p { max-width: 36em; }
+.skj .sk-moment ul { justify-content: center; }
+.skj .sk-moment-shot { width: min(1000px, 100%); }
+.skj .sk-evening { gap: 64px; min-height: 0; }
+.skj .sk-orb { position: relative; left: auto; top: auto; flex: none; align-self: flex-start; margin-top: 56px; }
+/* 02 greys the second line of the headline; its words are spans of their own here. */
+.skj .sk-hero h1 span { color: inherit; }
+.skj .sk-hero h1 .skj-h1b { color: color-mix(in srgb, var(--ink) 42%, transparent); }
+/* The waitlist's phone field: the country's code on a chip, the number beside it on the same glass. */
+.skj .sk-hero-copy { position: relative; z-index: 2; }
+.skj-tel { position: relative; flex: 1; min-width: 0; display: flex; align-items: center; border-radius: 14px; transition: background .2s; }
+.skj-tel:focus-within { background: rgba(255, 255, 255, .7); }
+.sk-join .skj-tel input, .sk-join .skj-tel input:focus { flex: 1; padding-left: 10px; background: transparent; font-variant-numeric: tabular-nums; }
+.skj-cc { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 36px; margin-left: 6px; padding: 0 9px 0 10px; border: 0; border-radius: 10px; background: rgba(255, 255, 255, .75);
+  box-shadow: inset 0 0 0 1px rgba(14, 18, 27, .08); font: inherit; font-size: 15px; font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; cursor: pointer; transition: background .2s; }
+.skj-cc:hover, .skj-cc[aria-expanded='true'] { background: #fff; }
+.skj-cc svg { color: var(--soft); transition: transform .3s var(--ease); }
+.skj-cc[aria-expanded='true'] svg { transform: rotate(180deg); }
+.skj-flag { font-size: 18px; line-height: 1; }
+/* The countries drop under the chip; at the foot of the page they open upwards instead. The list is
+   solid: glass inside the form's glass would blur nothing, and the lines under the form show through. */
+.skj .sk-join-row:has(.skj-picker) { position: relative; z-index: 5; }
+.skj-picker { position: absolute; z-index: 40; top: calc(100% + 10px); left: 0; width: max(100%, 300px); padding: 6px; border-radius: 18px; text-align: left;
+  background: #fdfbfa; border: 1px solid #fff;
+  box-shadow: 0 18px 40px -12px rgba(48, 57, 82, .28), 0 2px 6px rgba(48, 57, 82, .06); animation: skjPick .22s var(--ease) both; }
+.sk-final .skj-picker { top: auto; bottom: calc(100% + 10px); }
+@keyframes skjPick { from { opacity: 0; transform: translateY(-6px) scale(.98); } }
+.sk-join .skj-picker input, .sk-join .skj-picker input:focus { width: 100%; height: 40px; padding: 0 12px; border-radius: 12px; background: rgba(14, 18, 27, .05); text-align: left; box-shadow: none; }
+.skj-picker ul { margin: 6px 0 0; padding: 0; list-style: none; max-height: 264px; overflow-y: auto; overscroll-behavior: contain; }
+.skj-picker li { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 10px; border-radius: 10px; font-size: 15px; cursor: pointer; }
+.skj-picker li[data-active] { background: rgba(255, 107, 87, .1); }
+.skj-picker li[aria-selected='true'] .skj-cc-name { font-weight: 600; }
+.skj-picker li.skj-cc-last-pinned { position: relative; margin-bottom: 9px; }
+.skj-picker li.skj-cc-last-pinned::after { content: ''; position: absolute; left: 10px; right: 10px; bottom: -5px; border-top: 1px solid rgba(14, 18, 27, .08); }
+.skj-cc-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.skj-cc-dial { color: var(--muted); font-variant-numeric: tabular-nums; }
+.skj-cc-none { margin: 0; padding: 12px 10px; font-size: 14px; color: var(--muted); }
+/* Where a part of the page is still loading: Jamo thinking, as index.html shows it before the script.
+   It fades in late, so a fast connection never sees it. */
+.skj-loading { display: grid; place-items: center; min-height: 70vh; animation: skjLoading .5s .3s both; }
+.skj-loading.tall { min-height: 100vh; }
+@keyframes skjLoading { from { opacity: 0; } }
+/* Under a waitlist form: the switch between a phone number and an address. */
+.skj-switch { display: block; margin: 10px auto 0; padding: 4px 8px; border: 0; background: transparent; font: inherit; font-size: 14px; color: var(--muted);
+  text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--muted) 40%, transparent); text-underline-offset: 3px; cursor: pointer; }
+.skj-switch:hover { color: var(--ink); }
+/* Under a waitlist form: what the number or the address is for. */
+.skj-why { margin: 12px auto 0; max-width: 36em; font-size: 14px; line-height: 1.5; color: var(--muted); text-align: center; text-wrap: pretty; white-space: pre-line; }
+.skj .sk-ai { margin-left: 0; }
+.skj .sk-who article { align-items: center; text-align: center; }
+
+/* ---------- Jamo's notes (03's margin, said on the sky) ---------- */
+.skj-notes { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+.skj-note { position: absolute; min-height: 64px; padding: 6px 0 0 76px; }
+.skj-note.stack { padding: 66px 0 0; }
+.skj-probe { left: 0; top: 0; visibility: hidden; pointer-events: none; }
+/* What Jamo says: a pane of the page's glass, in the page's own type, its corner tucked toward Jamo. */
+.skj-say { display: block; width: fit-content; max-width: 100%; padding: 10px 14px 11px; border-radius: 4px 18px 18px 18px; background: rgba(255, 255, 255, .78); border: 1px solid #fff;
+  box-shadow: var(--glass-inset), 0 14px 30px -14px rgba(48, 57, 82, .3), 0 3px 8px -4px rgba(48, 57, 82, .12); font-size: 15px; line-height: 1.45; font-weight: 500; color: var(--ink); text-wrap: pretty; }
+/* Nothing is said until Jamo lands at the note; then the pane opens out of Jamo's corner, and again in a new language. */
+.skj-note .skj-say { opacity: 0; transform-origin: 0 0; }
+.skj-note.seen .skj-say { animation: skjSay .5s cubic-bezier(.34, 1.56, .64, 1) .1s both; }
+@keyframes skjSay { from { opacity: 0; transform: translateY(6px) scale(.94); } to { opacity: 1; transform: none; } }
+/* The arrow's path is drawn in the note's own coordinates, towards whatever the note is about (notes.tsx).
+   It is drawn while Jamo stands at the note, once the pane is up, and rubbed out when Jamo flies on. */
+.skj-arrow { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: visible; fill: none; stroke: var(--coral); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .3s ease; }
+.skj-note.here .skj-arrow { stroke-dashoffset: 0; transition: stroke-dashoffset .75s cubic-bezier(.6, 0, .3, 1) .5s; }
+/* The carrier only moves; the body leans, spins and squashes in flight (src/shared/jamo-flight.ts). */
+.skj-jamo { position: absolute; left: 0; top: 0; filter: drop-shadow(0 10px 16px rgba(48, 57, 82, .3)); will-change: transform; }
+.skj-jamo-body { transform-origin: 50% 60%; }
+.skj-dock { position: fixed; z-index: 40; right: 12px; bottom: 12px; display: flex; flex-direction: row-reverse; align-items: flex-end; gap: 8px; max-width: min(360px, calc(100vw - 24px)); pointer-events: none; }
+.skj-dock-jamo { flex: none; filter: drop-shadow(0 8px 14px rgba(48, 57, 82, .3)); }
+/* In the dock Jamo is to the right, so the corner is too; the one pane on screen keeps its frost. */
+.skj-bubble { border-radius: 18px 18px 4px 18px; background: var(--glass-strong); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); transform-origin: 100% 100%;
+  animation: skjBubble .5s cubic-bezier(.34, 1.56, .64, 1) both, skjBubbleOut .6s 5s ease forwards; }
+@keyframes skjBubble { from { opacity: 0; transform: translateY(8px) scale(.94); } }
+/* On a phone the bubble would sit over the page: it says its note, then goes until the next one. */
+@keyframes skjBubbleOut { to { opacity: 0; transform: translateY(4px); } }
+
+/* ---------- The language switch ---------- */
+.skj-lang { position: relative; flex: none; }
+.skj-lang-btn { display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 10px 0 9px; border: 1px solid #fff; border-radius: 12px; background: rgba(255, 255, 255, .55); color: var(--ink); font-size: 13.5px; font-weight: 600; cursor: pointer; transition: background .2s, box-shadow .2s; }
+.skj-lang-btn:hover, .skj-lang.open .skj-lang-btn { background: rgba(255, 255, 255, .9); box-shadow: 0 8px 18px -10px rgba(48, 57, 82, .4); }
+.skj-lang-code { min-width: 2.3ch; letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+.skj-lang-chev { color: var(--soft); transition: transform .4s var(--ease); }
+.skj-lang-chev path { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.skj-lang.open .skj-lang-chev { transform: rotate(180deg); }
+.skj-globe { color: var(--coral); }
+.skj-globe-m { transform-origin: 12px 12px; transform-box: view-box; }
+.skj-lang-btn:hover .skj-globe-m, .skj-lang.open .skj-globe-m { animation: skjMeridian 1.8s linear infinite; }
+@keyframes skjMeridian { 50% { transform: scaleX(-1); } }
+.skj-globe.spin { animation: skjSpin .9s cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes skjSpin { from { transform: rotate(-220deg) scale(.5); } }
+/* The list: glass that springs open from the pill, rows that drop in one after another, and a white
+   thumb that glides to the row under the pointer, where the hello writes itself in Jamo's hand. */
+.skj-lang-menu { position: absolute; right: 0; top: calc(100% + 10px); width: 268px; margin: 0; padding: 6px; list-style: none; border-radius: 18px; outline: none;
+  background: rgba(255, 255, 255, .86); -webkit-backdrop-filter: blur(24px) saturate(1.5); backdrop-filter: blur(24px) saturate(1.5); border: 1px solid #fff;
+  box-shadow: var(--glass-inset), 0 28px 56px -18px rgba(48, 57, 82, .38), 0 6px 14px -6px rgba(48, 57, 82, .16);
+  transform-origin: calc(100% - 36px) -8px; opacity: 0; visibility: hidden; transform: translateY(-8px) scale(.9); filter: blur(4px);
+  transition: opacity .16s ease, transform .3s var(--ease), filter .2s ease, visibility 0s .3s; }
+/* Keyboard focus is shown by the thumb, which follows the arrow keys. */
+.skj .skj-lang-menu:focus-visible { outline: none; }
+.skj-lang.open .skj-lang-menu { opacity: 1; visibility: visible; transform: none; filter: none; transition: opacity .2s ease, transform .55s cubic-bezier(.34, 1.56, .64, 1), filter .3s ease, visibility 0s; }
+.skj-lang-thumb { position: absolute; left: 6px; right: 6px; top: 6px; height: 52px; border-radius: 13px; background: #fff; box-shadow: inset 0 1px 0 #fff, 0 8px 18px -8px rgba(48, 57, 82, .3); transform: translateY(calc(var(--i) * 52px)); transition: transform .5s cubic-bezier(.34, 1.4, .64, 1); }
+.skj-lang-menu li { position: relative; z-index: 1; display: grid; grid-template-columns: 36px minmax(0, 1fr) auto 18px; align-items: center; gap: 10px; height: 52px; padding: 0 12px 0 10px; border-radius: 13px; cursor: pointer; }
+.skj-lang.open .skj-lang-menu li { animation: skjRowIn .45s var(--ease) both; animation-delay: calc(var(--n) * 45ms + 60ms); }
+@keyframes skjRowIn { from { opacity: 0; transform: translateY(-8px); } }
+.skj-lang-menu b { display: grid; place-items: center; height: 26px; border-radius: 8px; background: rgba(14, 18, 27, .06); color: var(--muted); font-size: 11.5px; font-weight: 700; letter-spacing: .08em; transition: background .3s, color .3s; }
+.skj-lang-menu li.cur b { background: var(--coral); color: #fff; }
+.skj-lang-name { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+.skj-lang-hello { font: 20px/1 var(--hand); color: var(--pencil); transform: rotate(-4deg); clip-path: inset(-30% 100% -30% 0); transition: clip-path .55s cubic-bezier(.5, 0, .3, 1); }
+.skj-lang-menu li.hot .skj-lang-hello { clip-path: inset(-30% -10% -30% 0); }
+.skj-lang-tick { fill: none; stroke: var(--coral); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 16; stroke-dashoffset: 16; }
+.skj-lang-menu li.cur .skj-lang-tick { stroke-dashoffset: 0; transition: stroke-dashoffset .45s ease .15s; }
+/* A soft ring of light that spreads over the page from the switch. */
+.skj-wave { position: fixed; z-index: 60; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, transparent 42%, rgba(255, 255, 255, .5) 60%, rgba(255, 180, 160, .32) 68%, transparent 73%); animation: skjWave 1.15s cubic-bezier(.2, .7, .2, 1) forwards; }
+@keyframes skjWave { from { transform: scale(0); opacity: 1; } 70% { opacity: .8; } to { transform: scale(90); opacity: 0; } }
+/* Body copy surfaces out of a blur in the new language; the screens behind it settle back in. */
+.skj-lang-in :is(.sk-head p, .sk-moment-copy p, .sk-moment li, .sk-lead, .sk-hint, .sk-pill, .skj-why, .skj-noticed p, .skj-little-grid article > p, .skj-little-at, .skj-platforms p, .skj-os, .skj-badge, .skj-soon, .skj-when, .sk-who p, .sk-final p, .skj-dl-card p, .skj-builds small, .skj-perks li, .sk-clock span, .sk-foot-links) {
+  animation: skjLangIn .75s var(--ease) both; }
+.skj-lang-in .jui-scaled-in { animation: skjShotIn .6s ease both; }
+@keyframes skjLangIn { from { opacity: 0; filter: blur(8px); transform: translateY(6px); } }
+@keyframes skjShotIn { from { opacity: .5; } }
+
+/* ---------- The bar: the brand, the clock in the middle, the language and the waitlist ---------- */
+.skj .sk-nav { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 14px; }
+.skj .sk-brand { justify-self: start; }
+.skj-nav-end { justify-self: end; display: flex; align-items: center; gap: 8px; }
+.skj .sk-clock { margin-left: 0; gap: 9px; padding: 0 14px 0 11px; }
+.skj .sk-clock span { min-width: 4.6em; }
+.skj-sky-ico { position: relative; display: grid; width: 18px; height: 18px; }
+.skj-sky-ico svg { grid-area: 1 / 1; transition: opacity .5s ease, transform .7s var(--ease); }
+.skj-sun circle { fill: #ff8a3d; }
+.skj-sun path { fill: none; stroke: #ff8a3d; stroke-width: 1.8; stroke-linecap: round; }
+.skj-moon { fill: #6f74d8; opacity: 0; transform: rotate(-70deg) scale(.5); }
+.skj-sky-ico.night .skj-sun { opacity: 0; transform: rotate(90deg) scale(.5); }
+.skj-sky-ico.night .skj-moon { opacity: 1; transform: none; }
+.skj .skj-back { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px 0 11px; border-radius: 12px; font-size: 14px; font-weight: 500; color: var(--muted); transition: background .2s, color .2s; }
+.skj .skj-back:hover { background: rgba(255, 255, 255, .6); color: var(--ink); }
+
+/* ---------- A phone ---------- */
+.skj-phone { position: relative; width: 320px; padding: 10px; border-radius: 52px; background: linear-gradient(145deg, #3a3e45, #16181c); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .18), var(--lift); }
+.skj-phone-screen { position: relative; height: 640px; border-radius: 42px; overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(246, 241, 239, .96)); }
+.skj-island { position: absolute; left: 50%; top: 11px; width: 100px; height: 28px; margin-left: -50px; border-radius: 14px; background: #0b0c0e; }
+.skj-sig { display: flex; align-items: flex-end; gap: 2px; height: 12px; }
+.skj-sig i { width: 3px; border-radius: 1px; background: var(--ink); }
+.skj-sig i:nth-child(1) { height: 4px; } .skj-sig i:nth-child(2) { height: 6px; } .skj-sig i:nth-child(3) { height: 9px; } .skj-sig i:nth-child(4) { height: 12px; }
+.skj-sig em { width: 22px; height: 11px; margin-left: 6px; border-radius: 3px; border: 1.5px solid var(--ink); box-shadow: inset 14px 0 0 -1px var(--ink); }
+.skj-shot-phone .skj-phone-screen { height: auto; display: block; }
+.skj-shot-phone .skj-island { top: 10px; }
+
+/* The mobile app's home screen, at the design's 390 × 844. */
+.skj-mh { position: relative; width: 390px; height: 844px; overflow: hidden; color: #14161a; letter-spacing: -.01em;
+  background: radial-gradient(120% 55% at 0% 0%, #ffe0d1 0%, transparent 62%), radial-gradient(80% 45% at 100% 72%, #dcecff 0%, transparent 62%), linear-gradient(180deg, #fff2ec, #f7f3f4 55%, #f3eff1); }
+.skj-mh p, .skj-mh h4 { margin: 0; }
+.skj-mh-status { display: flex; align-items: center; justify-content: space-between; height: 50px; padding: 14px 30px 0 40px; font-size: 16px; }
+.skj-mh-status b { font-weight: 600; }
+.skj-mh-top { display: flex; align-items: center; gap: 10px; margin: 8px 16px 0; }
+.skj-mh-team { display: inline-flex; align-items: center; gap: 12px; height: 50px; padding: 0 14px 0 6px; border-radius: 25px; background: rgba(255, 255, 255, .75); border: 1px solid #fff; font-size: 17px; font-weight: 600; }
+.skj-mh-team i { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; background: #23262b; color: #fff; font-size: 13px; font-style: normal; font-weight: 700; }
+.skj-mh-team svg path { fill: none; stroke: #6b6f76; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.skj-mh-bell { position: relative; display: grid; place-items: center; width: 50px; height: 50px; margin-left: auto; border-radius: 50%; background: rgba(255, 255, 255, .75); }
+.skj-mh-bell em { position: absolute; right: 13px; top: 12px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 0 2px #fff; }
+.skj-mh-me { display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%; background: #ff7a45; color: #fff; font-size: 17px; font-weight: 600; }
+.skj-mh-date { margin: 20px 16px 0 !important; font-size: 15px; color: #6b6f76; }
+.skj-mh-hello { margin: 2px 16px 0 !important; font-size: 27px; font-weight: 700; letter-spacing: -.035em; line-height: 1.15; }
+.skj-mh-row { display: flex; align-items: center; gap: 8px; margin: 20px 16px 10px; }
+.skj-mh-row b { font-size: 17px; font-weight: 700; letter-spacing: -.02em; }
+.skj-mh-row > span { font-size: 14px; color: #8a8f98; }
+.skj-mh-row i { position: relative; width: 34px; height: 34px; border-radius: 50%; background: rgba(255, 255, 255, .7); }
+.skj-mh-row i.up { margin-left: auto; }
+.skj-mh-row i::before { content: ''; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; border: solid #30343a; border-width: 1.8px 1.8px 0 0; transform: translate(-50%, -25%) rotate(-45deg); }
+.skj-mh-row i.down::before { transform: translate(-50%, -75%) rotate(135deg); }
+.skj-mh-meet { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 16px; padding: 13px 14px 13px 26px; border-radius: 20px; background: #fff;
+  box-shadow: 0 10px 24px -14px rgba(48, 57, 82, .3), 0 10px 0 -5px rgba(255, 233, 223, .95), 0 20px 0 -10px rgba(255, 216, 200, .8); }
+.skj-mh-meet::before { content: ''; position: absolute; left: 14px; top: 16px; bottom: 16px; width: 4px; border-radius: 2px; background: #ff7a45; }
+.skj-mh-meet b { display: block; font-size: 16.5px; font-weight: 700; letter-spacing: -.02em; }
+.skj-mh-when { font-size: 13px; color: #e0702f; }
+.skj-mh-when span { margin-left: 4px; color: #22a35a; }
+.skj-mh-where { font-size: 13px; color: #8a8f98; }
+.skj-mh-join { flex: none; display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 15px; border-radius: 20px; background: #ff7a45; color: #fff; font-size: 15.5px; font-weight: 600; box-shadow: 0 10px 20px -8px rgba(255, 122, 69, .8); }
+.skj-mh-swipe { margin: 18px 0 0 !important; text-align: center; font-size: 12.5px; color: #9aa0a8; }
+.skj-mh-all { margin-left: auto; color: #e0702f !important; font-weight: 500; }
+.skj-mh-tasks { margin: 0 16px; padding: 0; list-style: none; border-radius: 20px; background: #fff; box-shadow: 0 10px 24px -16px rgba(48, 57, 82, .3); }
+.skj-mh-tasks li { position: relative; padding: 12px 40px 12px 18px; border-bottom: 1px solid #f0f0f3; }
+.skj-mh-tasks li:last-child { border-bottom: 0; }
+.skj-mh-tasks li::after { content: ''; position: absolute; right: 22px; top: 50%; width: 8px; height: 8px; border: solid #a3a8b0; border-width: 1.8px 1.8px 0 0; transform: translateY(-50%) rotate(45deg); }
+.skj-mh-tasks b { display: block; font-size: 16px; font-weight: 600; letter-spacing: -.02em; }
+.skj-mh-meta { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 13px; color: #8a8f98; }
+.skj-mh-meta em { display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 7px; background: #f1f2f5; color: #3d4148; font-style: normal; font-weight: 600; }
+.skj-mh-meta em.late { background: #fff0e6; color: #c2561b; }
+.skj-mh-due { display: block; margin-top: 4px; font-size: 13px; }
+.skj-mh-due.late { color: #d23c3c; } .skj-mh-due.today { color: #c9971a; } .skj-mh-due.later { color: #3d4148; }
+.skj-mh-bar { position: absolute; left: 12px; right: 12px; bottom: 26px; display: flex; align-items: center; gap: 10px; }
+.skj-mh-bar nav { flex: 1; display: flex; justify-content: space-around; align-items: center; height: 72px; padding: 0 6px; border-radius: 36px; background: rgba(255, 255, 255, .85); border: 1px solid #fff; box-shadow: 0 14px 30px -16px rgba(48, 57, 82, .35); }
+.skj-mh-bar nav span { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 52px; font-size: 11.5px; color: #555a62; }
+.skj-mh-bar nav span.on { color: #e0702f; font-weight: 600; }
+.skj-mh-bar nav span.on::before { content: ''; position: absolute; z-index: -1; left: 50%; top: -9px; width: 70px; height: 60px; margin-left: -35px; border-radius: 30px; background: rgba(255, 122, 69, .14); }
+.skj-mh-bar nav em { position: absolute; right: 8px; top: -6px; display: grid; place-items: center; min-width: 20px; height: 20px; border-radius: 10px; background: #ef4444; color: #fff; font-size: 11px; font-style: normal; font-weight: 700; box-shadow: 0 0 0 2px #fff; }
+.skj-mh-jamo { flex: none; display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; background: #fff; box-shadow: 0 14px 30px -16px rgba(48, 57, 82, .45); }
+.skj-mh-jamo::before { content: ''; grid-area: 1 / 1; width: 56px; height: 38px; border-radius: 15px; background: #23262b; box-shadow: inset 0 0 0 3px #3b3f46; }
+.skj-mh-jamo i { grid-area: 1 / 1; z-index: 1; width: 9px; height: 10px; border-radius: 50%; background: #f5f7fb; transform: translateX(-9px); }
+.skj-mh-jamo i + i { transform: translateX(9px); }
+.skj-mh-home { position: absolute; left: 50%; bottom: 9px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #111; }
+
+/* Jamo in the mobile app, at the same 390 × 844: the last exchange sits over the composer. */
+.skj-mj { display: flex; flex-direction: column;
+  background: radial-gradient(95% 45% at 50% 0%, #ffd8c4 0%, transparent 72%), radial-gradient(70% 35% at 100% 74%, #e2edfb 0%, transparent 70%), linear-gradient(180deg, #ffeee6, #fdf8f6 45%, #f7f4f5); }
+.skj-mj svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.skj-mj-top { display: flex; align-items: center; gap: 10px; margin: 6px 16px 0; }
+.skj-mj-who { display: grid; margin-right: auto; line-height: 1.25; }
+.skj-mj-who b { font-size: 16.5px; font-weight: 600; letter-spacing: -.02em; }
+.skj-mj-who small { font-size: 13px; color: #e0702f; }
+.skj-mj-new, .skj-mj-close { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; border-radius: 23px; background: rgba(255, 255, 255, .6); border: 1px solid #fff; box-shadow: 0 8px 20px -14px rgba(48, 57, 82, .4); }
+.skj-mj-new { padding: 0 18px 0 15px; font-size: 15px; font-weight: 600; }
+.skj-mj-close { width: 46px; }
+.skj-mj-sees { display: flex; align-items: center; gap: 12px; align-self: center; margin-top: 12px; padding: 7px 14px 7px 12px; border-radius: 21px; background: rgba(255, 255, 255, .7); border: 1px solid #fff; box-shadow: 0 10px 24px -16px rgba(48, 57, 82, .35); }
+.skj-mj-sees > svg:first-child { color: #ff7a45; }
+.skj-mj-sees span { display: grid; line-height: 1.3; }
+.skj-mj-sees small { font-size: 12px; color: #8a8f98; }
+.skj-mj-sees b { font-size: 14px; font-weight: 600; }
+.skj-mj-sees .x { margin-left: 6px; color: #8a8f98; }
+.skj-mj-talk { margin: auto 20px 0; padding: 18px 0 110px; border-top: 1px solid rgba(48, 57, 82, .1); }
+.skj-mj-from { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #8a8f98; }
+.skj-mj-from.jamo { margin-top: 14px !important; color: #e0702f; font-weight: 600; }
+.skj-mj-from.jamo svg { fill: currentColor; stroke: none; }
+.skj-mj-ask { margin-top: 6px !important; font-size: 21px; font-weight: 700; letter-spacing: -.03em; line-height: 1.2; }
+.skj-mj-answer { margin-top: 4px !important; font-size: 16px; line-height: 1.45; color: #23262b; }
+.skj-mj .jui { margin-top: 12px; }
+.skj-mj .jui-effect { padding: 13px 16px; border-radius: 20px; border-color: #fff; box-shadow: 0 10px 24px -16px rgba(48, 57, 82, .3); }
+.skj-mj .jui-mono { font-size: 11.5px; }
+.skj-mj .jui-effect-badge { font-size: 12px; }
+.skj-mj .jui-effect-title { font-size: 16px; line-height: 22px; }
+.skj-mj .jui-effect-meta { font-size: 13.5px; line-height: 18px; }
+.skj-mj .jui-effect-actions button { font-size: 14px; }
+.skj-mj-next { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+.skj-mj-next li { display: inline-flex; align-items: center; gap: 10px; height: 40px; padding: 0 16px 0 12px; border-radius: 20px; background: rgba(255, 255, 255, .75); border: 1px solid #fff; font-size: 15px; font-weight: 500; white-space: nowrap; box-shadow: 0 8px 18px -14px rgba(48, 57, 82, .35); }
+.skj-mj-next svg { flex: none; color: #ff7a45; }
+.skj-mj-next .fill { fill: #ff7a45; stroke: none; }
+.skj-mj-next .hand { stroke: #fff; }
+.skj-mj-composer { position: absolute; left: 12px; right: 12px; bottom: 26px; display: flex; align-items: center; gap: 10px; height: 64px; padding: 0 7px 0 22px; border-radius: 32px; background: rgba(255, 255, 255, .85); border: 1px solid #fff; box-shadow: 0 14px 30px -16px rgba(48, 57, 82, .35); }
+.skj-mj-composer span { flex: 1; min-width: 0; font-size: 16px; color: #9aa0a8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.skj-mj-composer b { flex: none; display: inline-flex; align-items: center; gap: 8px; height: 50px; padding: 0 20px 0 16px; border-radius: 25px; background: #ff7a45; color: #fff; font-size: 16px; font-weight: 600; box-shadow: 0 0 0 3px rgba(255, 122, 69, .2), 0 10px 20px -8px rgba(255, 122, 69, .8); }
+
+/* ---------- 08:30: what did I miss? ---------- */
+.skj-digest-grid { display: grid; grid-template-columns: 320px minmax(0, 580px); justify-content: center; gap: 56px; align-items: center; }
+.skj-noticed { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.skj-noticed li { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 20px; align-items: center; padding: 20px 24px; border-radius: 24px; }
+/* Each figure says what it counts, right under it. */
+.skj-n { display: flex; flex-direction: column; gap: 6px; }
+.skj-n b { font-size: 46px; line-height: .9; font-weight: 300; letter-spacing: -.05em; font-variation-settings: 'opsz' 32; color: var(--coral); }
+.skj-n small { font-size: 12.5px; line-height: 1.25; font-weight: 600; color: var(--muted); }
+.skj-noticed p { font-size: 17px; line-height: 1.45; color: var(--ink); text-wrap: pretty; }
+
+/* ---------- 18:20: the small things ---------- */
+.skj-little-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.skj-little-grid article { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 12px 26px; border-radius: 26px; text-align: center; }
+.skj-little-grid h3 { padding: 0 12px; font-size: 20px; letter-spacing: -.02em; }
+.skj-little-grid article > p { padding: 0 14px; color: var(--muted); font-size: 15px; text-wrap: pretty; }
+/* The piece of the app each tile shows, on a pane of its own, the same height on every tile. */
+.skj .skj-little-demo { align-self: stretch; display: flex; flex-direction: column; justify-content: center; height: 212px; margin-bottom: 10px; padding: 16px; overflow: hidden; border-radius: 18px;
+  background: rgba(255, 255, 255, .5); border: 1px solid #fff; box-shadow: var(--glass-inset); text-align: left; }
+.skj-little-at { align-self: center; padding: 3px 9px; border-radius: 8px; background: rgba(255, 255, 255, .7); font-size: 12.5px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); }
+.skj-little-demo button { -webkit-tap-highlight-color: transparent; }
+/* Search on /: the query types itself and the tasks under it narrow. */
+.skj-search { display: flex; flex-direction: column; gap: 8px; height: 100%; }
+.skj-search.typed .jui-search span { color: var(--color-text); }
+.skj-search.typing .jui-search span::after { content: ''; display: inline-block; width: 1.5px; height: 1.05em; margin-left: 1px; vertical-align: -2px; background: var(--color-primary); animation: skjCaret 1s steps(1) infinite; }
+@keyframes skjCaret { 50% { opacity: 0; } }
+.skj-search ul { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.skj-search li { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 10px; border-radius: 10px; background: rgba(255, 255, 255, .75); font-size: 13px; color: var(--color-text-card); animation: skjRowIn .35s var(--ease) both; }
+.skj-search li > .code { flex: none; white-space: nowrap; }
+.skj-search li > span:last-child { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.skj-search mark { padding: 0 1px; border-radius: 3px; background: var(--color-primary-soft); color: inherit; }
+/* Who's around. */
+.skj-presence { display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0 4px; list-style: none; }
+.skj-presence li { display: grid; grid-template-columns: 36px minmax(0, 1fr); align-items: center; gap: 12px; }
+.skj-presence b { display: block; font-size: 14px; font-weight: 600; }
+.skj-presence small { display: block; font-size: 12.5px; color: var(--color-text-soft); animation: skjLangIn .5s var(--ease) both; }
+.skj-presence small.online { color: #17985a; }
+.skj-presence small.away { color: #b7801a; }
+/* Statuses your way: the task's badge follows the column it is in. */
+.skj-statuses { display: flex; flex-direction: column; gap: 16px; }
+.skj-statuses-card { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 12px 14px; border-radius: 12px; background: #fff; box-shadow: 0 1px 2px rgba(35, 38, 43, .06); }
+.skj-statuses-card b { font-size: 14px; font-weight: 500; }
+.skj-statuses-now { animation: skjSay .45s cubic-bezier(.34, 1.56, .64, 1) both; }
+.skj-statuses-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.skj-statuses-row button { display: inline-flex; padding: 0; border: 0; border-radius: 999px; background: none; cursor: pointer; }
+.skj-statuses-row .jui-status { transition: box-shadow .25s; }
+.skj-statuses-row button.on .jui-status { box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px currentColor; }
+/* A checklist to tick. */
+.skj-checklist .jui-detail-section { margin: 0; padding: 0 4px; }
+.skj-checklist .jui-check { padding: 7px 0; font-size: 14px; }
+.skj-checklist .jui-check i { transition: background .2s, border-color .2s; }
+/* Calls stay in the chat. */
+.skj-calls { display: flex; flex-direction: column; gap: 10px; }
+.skj-calls-in { display: flex; align-items: flex-end; gap: 8px; }
+.skj-calls .jui-bubble { align-self: flex-start; border-bottom-left-radius: 4px; }
+.skj-calls .jui-bubble.mine { align-self: flex-end; border-radius: 12px 12px 4px; background: var(--color-primary-soft); }
+.skj-calls .jui-call-record { min-width: 0; }
+/* Say it to Jamo. */
+.skj-voice { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.skj .skj-voice .jui-ai-composer { align-self: stretch; margin: 0; }
+
+/* ---------- 18:40: from anywhere ---------- */
+.skj-stage { position: relative; margin-bottom: 40px; }
+.skj-stage .jui-scaled { overflow: visible; }
+/* The screens inside the windows stay clipped to the windows' rounded corners. */
+.skj-stage .skj-shot { overflow: hidden; }
+/* The project rows' chevron sits alone under the assistant's row; the landing's lists do without it. */
+.skj .jui-chat-chev { display: none; }
+.skj-lights { display: inline-flex; gap: 7px; }
+.skj-lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.skj-lights i:nth-child(2) { background: #febc2e; }
+.skj-lights i:nth-child(3) { background: #28c840; }
+.skj-browser, .skj-desktop, .skj-dl-desk { position: absolute; border: 1px solid #fff; box-shadow: var(--glass-inset), var(--lift); background: rgba(255, 255, 255, .55); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); }
+.skj-browser { left: 0; top: 0; width: 620px; border-radius: 16px; }
+.skj-tabs { display: flex; align-items: flex-end; gap: 16px; height: 38px; padding: 0 12px; border-radius: 16px 16px 0 0; background: rgba(255, 255, 255, .45); }
+.skj-tabs .skj-lights { align-self: center; }
+.skj-tab { display: flex; align-items: center; gap: 8px; width: 200px; height: 30px; padding: 0 12px; border-radius: 10px 10px 0 0; background: rgba(255, 255, 255, .95); font-size: 12px; font-weight: 500; }
+.skj-tab .jui-logo { margin: 0 -12px; }
+.skj-tab em { margin-left: auto; font-style: normal; color: var(--soft); }
+.skj-url { display: flex; align-items: center; gap: 12px; height: 36px; padding: 0 12px; background: rgba(255, 255, 255, .95); border-bottom: 1px solid rgba(14, 18, 27, .06); }
+.skj-arrows { font-size: 15px; letter-spacing: 6px; color: var(--soft); }
+.skj-addr { flex: 1; display: flex; align-items: center; height: 24px; padding: 0 12px; border-radius: 12px; background: #f1f3f7; font-size: 12px; color: var(--soft); }
+.skj-addr b { font-weight: 500; color: var(--ink); }
+.skj .skj-shot { border-radius: 0 0 16px 16px; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.skj-shot .jui-window { background: transparent; }
+.skj-desktop { left: 250px; top: 150px; width: 610px; border-radius: 14px; }
+.skj-title { position: relative; display: flex; align-items: center; height: 32px; padding: 0 12px; border-radius: 14px 14px 0 0; background: rgba(255, 255, 255, .7); border-bottom: 1px solid rgba(14, 18, 27, .06); }
+.skj-title b { position: absolute; left: 0; right: 0; text-align: center; font-size: 12.5px; font-weight: 600; color: var(--muted); pointer-events: none; }
+.skj-desktop .skj-shot, .skj-dl-desk .skj-shot { border-radius: 0 0 14px 14px; }
+.skj-stage-phone { position: absolute; right: 0; top: 0; z-index: 2; }
+.skj-when { position: absolute; z-index: 3; left: 16px; bottom: -16px; display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border-radius: 10px; background: var(--ink); color: #fff; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; box-shadow: 0 10px 20px -10px rgba(14, 18, 27, .5); }
+.skj-stage-phone .skj-when { left: 50%; bottom: -16px; transform: translateX(-50%); white-space: nowrap; }
+.skj-synced { position: absolute; z-index: 3; right: 40px; top: 54px; display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px 0 8px; border-radius: 12px; background: #fff; font-size: 13px; font-weight: 500; box-shadow: 0 0 0 1.5px #1fc16b, 0 18px 36px -18px rgba(14, 18, 27, .35); animation: skjSynced 7s 1s ease-in-out infinite both; }
+.skj-synced i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #1fc16b; color: #fff; font-size: 12px; font-style: normal; font-weight: 700; }
+@keyframes skjSynced { 0%, 18% { opacity: 0; transform: translateY(-8px) scale(.94); } 24%, 78% { opacity: 1; transform: none; } 86%, 100% { opacity: 0; transform: translateY(-4px); } }
+/* "Coming soon" on the desktop app's title bar and over the phone. */
+.skj-when b { font-weight: 700; }
+.skj-soon { display: inline-flex; align-items: center; height: 22px; padding: 0 10px; border-radius: 999px; background-color: #fff; color: var(--coral); font-size: 11.5px; font-weight: 700; letter-spacing: .01em; white-space: nowrap; box-shadow: 0 0 0 1px rgba(255, 107, 87, .4), 0 6px 14px -8px rgba(255, 107, 87, .7); }
+/* Status labels are words on a tint, no dots. "Coming soon" catches the light now and then; "Early access" is open, so it holds still. */
+.skj-soon > span, .skj-badge:not(.early) > span { background-image: linear-gradient(100deg, var(--coral) 40%, #ffb39f 50%, var(--coral) 60%); background-size: 260% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: skjGlint 4.5s ease-in-out infinite; }
+@keyframes skjGlint { 0%, 55% { background-position: 100% 0; } 85%, 100% { background-position: 0 0; } }
+.skj-title .skj-soon { position: relative; z-index: 1; margin-left: auto; }
+.skj-stage-phone .skj-soon { position: absolute; z-index: 3; top: -11px; left: 50%; transform: translateX(-50%); height: 26px; padding: 0 11px; font-size: 12.5px; }
+.skj-platforms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
+.skj-platforms article { position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 30px 26px 26px; border-radius: 24px; text-align: center; }
+.skj-badge { display: inline-flex; align-items: center; height: 26px; padding: 0 11px; border-radius: 999px; background-color: rgba(255, 255, 255, .85); color: var(--coral); font-size: 12px; font-weight: 700; letter-spacing: .01em; white-space: nowrap; box-shadow: 0 0 0 1px rgba(255, 107, 87, .35); }
+.skj-badge.early { background-color: #e3f8ec; color: #128a4c; box-shadow: none; }
+.skj-platforms .skj-badge { position: absolute; top: 16px; right: 16px; }
+.skj-ico { display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 6px; border-radius: 13px; background: rgba(255, 255, 255, .7); color: var(--coral); }
+.skj-platforms h3 { font-size: 21px; letter-spacing: -.02em; }
+.skj-platforms p { color: var(--muted); font-size: 15.5px; }
+.skj-os { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: auto; padding-top: 6px; font-size: 12.5px; font-weight: 600; color: var(--muted); }
+.skj-os span { padding: 3px 9px; border-radius: 8px; background: rgba(255, 255, 255, .6); }
+.skj-dl-cta { display: flex; justify-content: center; margin-top: 36px; }
+.skj .skj-dl-btn { gap: 10px; height: 52px; padding: 0 24px; font-size: 15.5px; }
+
+/* ---------- The download page ---------- */
+.skj-dl { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 150px 32px 0; }
+.skj-dl-hero { display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; animation: skUp .9s var(--ease) both; }
+.skj-dl-hero h1 { max-width: 13em; font-size: clamp(40px, 6vw, 76px); line-height: 1; letter-spacing: -.045em; }
+.skj-dl-hero .sk-lead { max-width: 38em; }
+.skj-dl-hero .sk-pill { gap: 8px; color: var(--ink); }
+.skj-dl-face { margin-bottom: 4px; filter: drop-shadow(0 14px 22px rgba(48, 57, 82, .3)); }
+.skj-dl-show { position: relative; max-width: 980px; height: 580px; margin: 72px auto 0; }
+.skj-dl-desk { left: 0; top: 0; width: 78%; border-radius: 14px; }
+.skj-dl-phone { position: absolute; right: 2%; top: 40px; width: 250px; padding: 8px; border-radius: 42px; }
+.skj-dl-phone .skj-phone-screen { border-radius: 34px; }
+.skj-dl-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 64px; }
+.skj-dl-cell { display: flex; }
+.skj-dl-card { position: relative; flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 26px; border-radius: 26px; transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .6s var(--ease), box-shadow .3s; }
+.skj-dl-card.lean { transition: transform .12s linear, box-shadow .3s; }
+.skj-dl-card::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, .7), transparent 62%); opacity: 0; transition: opacity .3s; }
+.skj-dl-card.lean::after { opacity: 1; }
+.skj-dl-card.yours { box-shadow: 0 0 0 1.5px var(--coral), var(--glass-inset), 0 28px 56px -28px rgba(255, 107, 87, .55); }
+.skj-yours { position: absolute; top: -12px; left: 24px; display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: var(--coral); color: #fff; font-size: 12px; font-weight: 700; box-shadow: 0 8px 16px -8px rgba(255, 107, 87, .8); }
+.skj-dl-card header { display: flex; align-items: center; justify-content: space-between; }
+.skj-dl-card h3 { font-size: 24px; letter-spacing: -.02em; }
+.skj-dl-card p { color: var(--muted); font-size: 15.5px; }
+.skj-dl-actions { margin-top: auto; padding-top: 8px; }
+.skj .skj-dl-go { width: 100%; }
+.skj-builds { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.skj-builds li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 10px 10px 14px; border-radius: 14px; background: rgba(255, 255, 255, .55); border: 1px solid rgba(255, 255, 255, .9); }
+.skj-builds li.mine { background: #fff; box-shadow: 0 0 0 1.5px rgba(255, 107, 87, .55); }
+.skj-builds b { display: block; font-size: 15px; }
+.skj-builds small { display: block; font-size: 12.5px; color: var(--soft); }
+.skj-builds button { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border: 1px dashed rgba(14, 18, 27, .2); border-radius: 10px; background: transparent; color: var(--soft); font-size: 13px; font-weight: 600; white-space: nowrap; cursor: not-allowed; }
+.skj-stores { display: flex; flex-direction: column; gap: 10px; }
+.skj-store { position: relative; display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; align-items: center; gap: 12px; height: 62px; padding: 0 16px; overflow: hidden; border-radius: 14px; background: #0e121b; color: #fff; cursor: not-allowed; }
+.skj-store svg { width: 24px; height: 24px; }
+.skj-store small { display: block; font-size: 11px; opacity: .7; }
+.skj-store b { display: block; font-size: 18px; line-height: 1.1; letter-spacing: -.01em; }
+.skj-store em { font-size: 11.5px; font-style: normal; opacity: .6; text-align: right; }
+.skj-store.mine { box-shadow: 0 0 0 2px var(--coral); }
+/* Not out yet: a light passes over the badge now and then. */
+.skj-store::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .22) 50%, transparent 65%); transform: translateX(-100%); animation: skjShine 4.5s ease-in-out infinite; }
+.skj-store + .skj-store::after { animation-delay: .5s; }
+@keyframes skjShine { 0%, 55% { transform: translateX(-100%); } 85%, 100% { transform: translateX(100%); } }
+.skj-perks { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 28px; margin: 44px 0 0; padding: 0; list-style: none; font-size: 15px; color: var(--muted); }
+.skj-perks li { display: inline-flex; align-items: center; gap: 8px; }
+.skj-perks svg { color: var(--coral); }
+.skj-dl .sk-final { padding: 130px 0 120px; }
+
+/* ---------- Narrow screens ---------- */
+@media (max-width: 1080px) {
+  .skj .sk-moment, .skj .sk-moment.flip { padding: 88px 24px 100px; gap: 36px; }
+  .skj-digest-grid { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 40px; }
+  .skj-little-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .skj-noticed { width: 100%; max-width: 600px; }
+  .skj .sk-evening { flex-direction: column; gap: 24px; }
+  /* Stacked over the panel, the orb is centred like everything else. */
+  .skj .sk-orb { align-self: center; margin-top: 0; }
+  .skj-dl-grid { grid-template-columns: minmax(0, 1fr); max-width: 560px; margin-left: auto; margin-right: auto; }
+  .skj-dl-show { height: auto; aspect-ratio: 980 / 580; }
+  .skj-dl-phone { width: 25.5%; top: 7%; border-radius: 15% / 7%; }
+  .skj-dl-phone .skj-phone-screen { border-radius: 12% / 5.5%; }
+  .skj-dl-phone .skj-island { width: 34%; height: 3.4%; margin-left: -17%; top: 1.4%; }
+}
+@media (max-width: 760px) {
+  .skj-platforms { grid-template-columns: minmax(0, 1fr); }
+  .skj-little-grid { grid-template-columns: minmax(0, 1fr); max-width: 440px; margin: 0 auto; }
+  .skj-noticed li { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 20px; }
+  .skj-n { flex-direction: row; align-items: baseline; gap: 10px; }
+  .skj-n b { font-size: 40px; }
+  .skj-noticed p { font-size: 16px; }
+  .skj .sk-nav .skj-back span { display: none; }
+  .skj-dl { padding: 116px 16px 0; }
+  .skj-dl-show { margin-top: 48px; }
+}
+@media (max-width: 640px) {
+  .skj .sk-moment, .skj .sk-moment.flip { padding: 72px 16px 80px; }
+  .skj-lang-menu { width: min(268px, calc(100vw - 32px)); }
+  .skj-dl .sk-final { padding: 90px 0 80px; }
+}
+@media (max-width: 480px) {
+  .skj .sk-nav .sk-clock span { display: none; }
+  .skj .sk-nav .sk-clock { padding: 0 10px; }
+  /* The word goes under the mark, small: beside it, it would run under the clock. */
+  .skj .sk-nav .sk-brand { flex-direction: column; gap: 3px; font-size: 10px; line-height: 1; letter-spacing: 0; }
+}
+
+/* ---------- Phones and touch ---------- */
+.skj { -webkit-tap-highlight-color: transparent; }
+.skj-cta-short { display: none; }
+/* The dock keeps clear of the home indicator, and steps aside while the keyboard is up. */
+.skj-dock { right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); transition: opacity .25s, visibility .25s; }
+.skj:has(.sk-join input:focus) .skj-dock, .skj:has(.skj-picker) .skj-dock { opacity: 0; visibility: hidden; }
+/* Wherever the dock shows (notes.tsx: under 1100), the footer ends above it, so Jamo never covers its links. */
+@media (max-width: 1099px) {
+  .skj .sk-foot { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+}
+.skj-phone { max-width: 100%; }
+/* 18:40 on a phone (sections.tsx draws the stage 460 wide): the browser, and the phone over its corner. */
+.skj-stage.narrow { margin-bottom: 32px; }
+.skj-stage.narrow .skj-browser { width: 440px; }
+.skj-stage.narrow .skj-stage-phone { top: 150px; width: 220px; padding: 8px; border-radius: 40px; }
+.skj-stage.narrow .skj-stage-phone .skj-phone-screen { border-radius: 32px; }
+.skj-stage.narrow .skj-island { top: 8px; width: 62px; height: 18px; margin-left: -31px; border-radius: 9px; }
+/* Every frosted pane re-blurs the sky behind it on each frame of scrolling, which a phone can't keep up
+   with. On touch screens they turn into plain tinted glass; only the bar keeps its blur. */
+@media (max-width: 760px), (hover: none) {
+  .skj :is(.sk-glass, .sk-moment li, .sk-scaled, .sk-call, .sk-ai, .sk-orb, .sk-orb-state, .sk-join-row, .sk-joined, .sk-pill, .skj-browser, .skj-desktop, .skj-dl-desk) { -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .skj .sk-glass { background: rgba(255, 255, 255, .52); }
+  .skj .sk-moment li { background: rgba(255, 255, 255, .78); }
+  .skj .sk-scaled { background: rgba(255, 255, 255, .32); }
+  .skj :is(.skj-browser, .skj-desktop, .skj-dl-desk) { background: rgba(255, 255, 255, .72); }
+  .skj .sk-join-row { background: rgba(255, 255, 255, .8); }
+}
+/* No hover on touch: a tapped button would stay lifted. It gives under the finger instead. */
+@media (hover: none) {
+  .skj .sk-btn:hover { transform: none; filter: none; }
+  .skj .sk-btn:active { transform: scale(.97); filter: brightness(.95); }
+  .skj .sk-hint i { display: none; }
+}
+@media (max-width: 640px) {
+  /* The bar: the mark, the clock, the language, and a short "sign up" that 02 hid at this width. */
+  .skj .sk-nav { grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; padding: 6px 6px 6px 10px; }
+  .skj .sk-nav .sk-clock { justify-self: center; }
+  .skj .sk-nav .skj-nav-cta { display: inline-flex; padding: 0 13px; }
+  .skj-cta-long { display: none; }
+  .skj-cta-short { display: inline; }
+  .skj-nav-end { gap: 6px; }
+  .skj-lang-btn { padding: 0 10px; }
+  .skj-lang-chev { display: none; }
+  /* The list hangs from the whole bar rather than the pill, which sits too far left for it to fit. */
+  .skj-lang { position: static; }
+  .skj-lang-menu { left: 0; right: 0; width: auto; transform-origin: 70% -8px; }
+  /* What Jamo left on each screen, which 02 hid on a phone, comes out from under the window at its real size. */
+  .skj .sk-float .sk-extra { display: block; position: relative; inset: auto; transform: none; width: min(340px, calc(100% - 16px)); margin: -36px auto 0; }
+  .skj .m-board .sk-float .sk-extra { width: 232px; }
+  .skj .m-drive .sk-float .sk-extra { width: fit-content; max-width: calc(100% - 16px); }
+  .skj .sk-who article { min-height: 0; }
+  /* The footer wraps onto two lines; both are centred, like the page above them. */
+  .skj .sk-foot { justify-content: center; gap: 10px 16px; }
+  .skj .sk-foot-links { width: 100%; margin-left: 0; justify-content: center; }
+  .skj-dock { max-width: min(300px, calc(100vw - 24px)); }
+  .skj-bubble { padding: 9px 12px 10px; font-size: 14px; }
+  /* The form stacks: the address gets a field of its own, as tall as the button under it, rather than
+     sitting borderless on the glass. In the column its flex: 1 would size it from zero, not its height. */
+  .skj .sk-join-row { gap: 8px; padding: 8px; border-radius: 22px; }
+  .skj .sk-join-row > input, .skj .skj-tel { flex: none; height: 52px; border-radius: 14px; background: #fff; box-shadow: inset 0 0 0 1px rgba(14, 18, 27, .1); }
+  .skj .sk-join-row > input { padding: 0 16px; text-align: center; }
+  .skj .sk-join-row > input:focus, .skj .skj-tel:focus-within { background: #fff; box-shadow: inset 0 0 0 1.5px var(--coral), 0 0 0 4px rgba(255, 107, 87, .14); }
+  .skj .sk-join-row > input[aria-invalid='true'], .skj .skj-tel:has(> input[aria-invalid='true']) { box-shadow: inset 0 0 0 1.5px #c0303e; }
+  .skj .skj-tel input { height: 52px; font-size: 17px; }
+  .skj .skj-cc { height: 40px; }
+  .skj-picker { width: 100%; }
+  .skj .sk-join .sk-btn { height: 52px; }
+}
+/* A phone on its side is wide but short: the bubble keeps its phone size, so it doesn't cover half the screen. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .skj-dock { max-width: min(300px, calc(100vw - 24px)); }
+  .skj-bubble { padding: 9px 12px 10px; font-size: 14px; }
+}
+/* Narrow phones (360–380): the clock keeps the time and lets the sun and moon go. */
+@media (max-width: 380px) {
+  .skj .sk-nav .skj-sky-ico { display: none; }
+}
+/* The smallest phones: the clock gives its place to the button. */
+@media (max-width: 350px) {
+  .skj .sk-nav .sk-clock { display: none; }
+  .skj .sk-nav { grid-template-columns: auto minmax(0, 1fr); }
+  .skj-nav-end { justify-self: end; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skj-note.seen .skj-say { animation: none; opacity: 1; }
+  .skj-note.here .skj-arrow { stroke-dashoffset: 0; }
+  .skj-wave { display: none; }
+  .skj-soon > span, .skj-badge > span { animation: none; }
+  .skj-search li, .skj-presence small, .skj-statuses-now { animation: none; }
+  .skj-sky-ico svg { transition: none; }
+}

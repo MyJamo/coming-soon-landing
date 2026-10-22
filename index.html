@@ -3,13 +3,45 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MyJamo</title>
+<title>MyJamo: день с Jamo</title>
+<meta name="description" content="Чаты, доски, календарь, звонки и диск в одном окне. А Jamo AI превращает переписку в задачи и встречи.">
+<!-- The sky's dawn colour, so the phone's browser bar runs into the page. -->
+<meta name="theme-color" content="#dce5f9">
+<meta property="og:title" content="MyJamo: день с Jamo">
+<meta property="og:description" content="Чаты, доски, календарь, звонки и диск в одном окне. А Jamo AI превращает переписку в задачи и встречи.">
+<meta property="og:type" content="website">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400..800&amp;display=swap" rel="stylesheet">
+<!-- Both families have Cyrillic. Inter (with opsz, as the app loads it) for the page and the app-UI kit;
+     Marck Script for the hello in the language menu, which the browser fetches only once it is shown.
+     The stylesheet loads without holding up the first paint: on a slow connection Jamo shows at once. -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&amp;family=Marck+Script&amp;display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..800&amp;family=Marck+Script&amp;display=swap" rel="stylesheet"></noscript>
+<style>
+body { margin: 0; background: #dce5f9; }
+/* Until the page's script and styles are in: Jamo thinking, its eyes gone to three dots (think2 in
+   dots/ and src/JamoFace.tsx, at 88 px). It fades in late, so a fast connection never sees it, and
+   main.tsx fades it out once the page is drawn. */
+#boot { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: #dce5f9; transition: opacity .45s ease, visibility 0s .45s; }
+#boot.gone { opacity: 0; visibility: hidden; }
+.boot-face { position: relative; width: 88px; height: 66px; border-radius: 27.7px; overflow: hidden;
+  background: linear-gradient(155deg, #5a5f68 0%, #33373e 38%, #1e2024 100%);
+  box-shadow: 0 7.9px 12.3px -4.4px rgba(35, 38, 43, .5), inset 0 1px 1px rgba(255, 255, 255, .35), inset 0 -2px 3px rgba(0, 0, 0, .35);
+  animation: bootIn .5s .4s both, bootBob 1.4s .4s ease-in-out infinite; }
+.boot-face i { position: absolute; inset: 4.84px; border-radius: 22.9px; background: radial-gradient(120% 100% at 35% 25%, #2a2e35 0%, #15171b 65%, #0f1114 100%); box-shadow: inset 0 1.8px 4.4px rgba(0, 0, 0, .7); }
+.boot-face::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(160deg, rgba(255, 255, 255, .16) 0%, rgba(255, 255, 255, 0) 30%); }
+.boot-face b { position: absolute; top: 26.7px; left: 17.5px; width: 12.6px; height: 12.6px; border-radius: 50%; background: #f5f7fb; box-shadow: 0 0 5.3px rgba(225, 235, 255, .55); opacity: .6; animation: bootDot .9s ease-in-out infinite; }
+.boot-face b + b { left: 35.1px; animation-delay: .15s; }
+.boot-face b + b + b { left: 52.7px; animation-delay: .3s; background: #ff6b57; box-shadow: 0 0 4.4px rgba(255, 107, 87, .7); }
+@keyframes bootIn { from { opacity: 0; } }
+@keyframes bootBob { 50% { transform: translateY(-2.4px); } }
+@keyframes bootDot { 30% { transform: translateY(-5.7px); opacity: 1; } 60%, 100% { transform: none; opacity: .6; } }
+@media (prefers-reduced-motion: reduce) { .boot-face { animation: bootIn .5s .4s both; } .boot-face b { animation: none; } }
+</style>
 </head>
 <body>
+<div id="boot" role="status" aria-label="Загружаем…"><div class="boot-face"><i></i><b></b><b></b><b></b></div></div>
 <div id="root"></div>
 <script type="module" src="/src/main.tsx"></script>
 </body>
