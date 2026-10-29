@@ -240,8 +240,8 @@ export function Footer() {
   return (
     <footer className="sk-foot">
       <span className="sk-brand"><Logo />MyJamo</span>
-      <span>© 2026 MyJamo</span>
       <span className="sk-foot-links"><a href={DOWNLOAD}>{t.nav.download}</a><span>{t.foot.privacy}</span><span>{t.foot.terms}</span></span>
+      <small className="skj-foot-legal">© 2026 B2B HAMKOR SOLUTIONS MChJ</small>
     </footer>
   );
 }

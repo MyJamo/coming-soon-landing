@@ -468,6 +468,9 @@
 /* The dock keeps clear of the home indicator, and steps aside while the keyboard is up. */
 .skj-dock { right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); transition: opacity .25s, visibility .25s; }
 .skj:has(.sk-join input:focus) .skj-dock, .skj:has(.skj-picker) .skj-dock { opacity: 0; visibility: hidden; }
+/* The footer's last line is the legal one, under a hairline across the whole row. */
+.skj .sk-foot { flex-wrap: wrap; row-gap: 24px; }
+.skj-foot-legal { flex-basis: 100%; padding-top: 20px; border-top: 1px solid rgba(14, 18, 27, .08); font-size: 12px; letter-spacing: .01em; color: var(--soft); }
 /* Wherever the dock shows (notes.tsx: under 1100), the footer ends above it, so Jamo never covers its links. */
 @media (max-width: 1099px) {
   .skj .sk-foot { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
@@ -516,6 +519,7 @@
   /* The footer wraps onto two lines; both are centred, like the page above them. */
   .skj .sk-foot { justify-content: center; gap: 10px 16px; }
   .skj .sk-foot-links { width: 100%; margin-left: 0; justify-content: center; }
+  .skj-foot-legal { text-align: center; }
   .skj-dock { max-width: min(300px, calc(100vw - 24px)); }
   .skj-bubble { padding: 9px 12px 10px; font-size: 14px; }
   /* The form stacks: the address gets a field of its own, as tall as the button under it, rather than
