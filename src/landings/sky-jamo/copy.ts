@@ -153,7 +153,7 @@ const ru = {
     ],
     effect: { badge: 'Срок 15 окт', meta: 'На проверке, срок 15 окт в 10:00' },
     typing: 'Jamo печатает',
-    state: { idle: 'на связи', listening: 'слушает', thinking: 'думает', glad: 'рад', worried: 'переживает', working: 'делает', done: 'готово', bye: 'до завтра', undone: 'отменил' },
+    state: { idle: 'на связи', listening: 'слушает', thinking: 'думает', glad: 'рад', asking: 'спрашивает', working: 'делает', done: 'готово', bye: 'до завтра', undone: 'отменил' },
   },
   little: {
     eyebrow: 'Мелочи',
@@ -385,7 +385,7 @@ const uz: Copy = {
     ],
     effect: { badge: 'Muddat 15-okt', meta: 'Koʻrikda, muddat 15-okt, 10:00' },
     typing: 'Jamo yozmoqda',
-    state: { idle: 'aloqada', listening: 'tinglayapti', thinking: 'oʻylayapti', glad: 'xursand', worried: 'xavotirda', working: 'bajaryapti', done: 'tayyor', bye: 'ertagacha', undone: 'bekor qildi' },
+    state: { idle: 'aloqada', listening: 'tinglayapti', thinking: 'oʻylayapti', glad: 'xursand', asking: 'soʻrayapti', working: 'bajaryapti', done: 'tayyor', bye: 'ertagacha', undone: 'bekor qildi' },
   },
   little: {
     eyebrow: 'Mayda qulayliklar',
@@ -615,7 +615,7 @@ const en: Copy = {
     ],
     effect: { badge: 'Due Oct 15', meta: 'In review, due Oct 15 at 10:00' },
     typing: 'Jamo is typing',
-    state: { idle: 'online', listening: 'listening', thinking: 'thinking', glad: 'glad', worried: 'worried', working: 'on it', done: 'done', bye: 'see you tomorrow', undone: 'undone' },
+    state: { idle: 'online', listening: 'listening', thinking: 'thinking', glad: 'glad', asking: 'asking', working: 'on it', done: 'done', bye: 'see you tomorrow', undone: 'undone' },
   },
   little: {
     eyebrow: 'Small things',

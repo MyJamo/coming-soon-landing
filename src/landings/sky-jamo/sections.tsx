@@ -191,14 +191,14 @@ function beatsFor(t: Copy): Beat[] {
     { ms: 400, shown: 1, mood: 'listening', label: s.listening },
     { ms: 1700, shown: 1, mood: 'think2', label: s.thinking, typing: true },
     { ms: 2300, shown: 2, mood: 'happy', label: s.glad },
-    { ms: 2900, shown: 3, mood: 'confused', label: s.worried },
+    { ms: 2900, shown: 3, mood: 'confused', label: s.asking },
     ...typeOut(lines[3], 3),
     { ms: 400, shown: 4, mood: 'listening', label: s.listening },
     { ms: 1600, shown: 4, mood: 'working', label: s.working, typing: true },
     { ms: 2600, shown: 5, mood: 'celebrate', label: s.done },
     ...typeOut(lines[5], 5),
     { ms: 400, shown: 6, mood: 'listening', label: s.listening },
-    { ms: 900, shown: 6, mood: 'think2', label: s.thinking, typing: true },
+    { ms: 900, shown: 6, mood: 'happy', label: s.glad, typing: true },
     { ms: 3200, shown: 7, mood: 'wink', label: s.bye },
     { ms: 1600, shown: 7, mood: 'idle', label: s.idle },
   ];
@@ -234,7 +234,7 @@ function JamoEvening() {
     ? { effect: { code: 'ORZ-13', badge: e.effect.badge, title: t.cards.dates, meta: e.effect.meta, undone, onUndo: () => setUndone(true), onOpen: () => setUndone(false) } }
     : { text, mine: i === 0 || i === 3 || i === 5 ? true : undefined });
   if (beat.typing) messages.push({ text: <span className="sk-typing" aria-label={e.typing}><i /><i /><i /></span> });
-  const [mood, label] = undone && beat.shown >= 5 ? ['surprised' as Mood, e.state.undone] : [beat.mood, beat.label];
+  const [mood, label] = undone && beat.shown >= 5 ? ['idle' as Mood, e.state.undone] : [beat.mood, beat.label];
 
   const stage = STAGE[beat.mood] ?? -1;
   useEffect(() => {
